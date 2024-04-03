@@ -37,7 +37,7 @@ const Header = ({ isOpen, onResize }: Props) => {
                <Search className="text-slate-500" />
             </Button>
             <Input
-               className="border-none text-slate-700 placeholder:text-base placeholder:text-slate-300 placeholder:font-medium placeholder:transition-all focus-visible:placeholder:translate-x-5"
+               className="border-none text-slate-700 placeholder:text-base placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-4"
                placeholder="Search..."
             />
          </div>

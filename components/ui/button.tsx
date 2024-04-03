@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "px-4 py-2 bg-primary text-primary-foreground rounded-lg shadow-md shadow-indigo-500/50 transition-all duration-300 hover:bg-indigo-600 hover:shadow-indigo-600/50 hover:-translate-y-0.5",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -17,6 +17,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         link: "text-primary underline-offset-4 hover:underline",
         sidebarLink: "w-full flex justify-start items-center gap-x-2 px-4 py-2.5 rounded-lg text-slate-500 text-sm font-medium transition-all duration-300 hover:bg-slate-100 hover:text-slate-700",
         activeSidebarLink: "w-full flex justify-start items-center gap-x-2 px-4 py-2.5 bg-indigo-100 rounded-lg text-indigo-500 text-sm font-medium relative before:absolute before:w-2 before:h-full before:-right-5 before:bg-indigo-500 before:rounded-full",

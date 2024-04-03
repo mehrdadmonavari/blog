@@ -5,6 +5,7 @@ import {
    Fingerprint,
    Gauge,
    Home,
+   LayoutGrid,
    UserRoundCog,
 } from "lucide-react";
 import Link from "next/link";
@@ -23,19 +24,25 @@ const sidebarLinks = [
             href: "/dashboard",
             icon: <Gauge className="w-5" />,
          },
-         {
-            collapsible: true,
-            header: "Estates",
-            subItems: [
-               { label: "Reports", href: "/dashboard/estates" },
-               { label: "New Estate", href: "/dashboard/estates/new" },
-            ],
-            icon: <Home className="w-5" />,
-         },
       ],
    },
    {
       id: 2,
+      title: "blog",
+      items: [
+         {
+            collapsible: true,
+            header: "Categories",
+            subItems: [
+               { label: "Reports", href: "/dashboard/post-categories" },
+               { label: "New Category", href: "/dashboard/post-categories/new" },
+            ],
+            icon: <LayoutGrid className="w-5" />,
+         },
+      ],
+   },
+   {
+      id: 3,
       title: "pages",
       items: [
          {
@@ -61,7 +68,7 @@ const sidebarLinks = [
       ],
    },
    {
-      id: 3,
+      id: 4,
       title: "components",
       items: [
          {

@@ -26,7 +26,7 @@ const AdminPanelLayout = ({ children }: PropsWithChildren) => {
             <ResizablePanel className="transition-all duration-300">
                <section className="min-h-screen flex flex-col px-6 bg-[#f5f5f9]">
                   <Header isOpen={isOpen} onResize={onResize} />
-                  <section id="content" className="flex-1 flex">
+                  <section className="flex-1 flex">
                      {children}
                   </section>
                </section>
