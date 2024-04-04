@@ -51,7 +51,7 @@ const PostCategoryNewForm = () => {
    return (
       <Form {...form}>
          <form onSubmit={form.handleSubmit(onSubmit)} className="py-6 space-y-6">
-            <div className="flex justify-center gap-x-10">
+            <div className="flex flex-col md:flex-row justify-center gap-x-10 gap-y-5">
                <FormField
                   control={form.control}
                   name="name"

@@ -13,25 +13,24 @@ import PostCategoryNewForm from "./PostCategoryNewForm";
 const NewPostCategoryPage = () => {
    return (
       <div className="flex-1 flex flex-col">
-         <div className="py-6">
+         <div className="py-4 sm:py-6">
             <Breadcrumb>
                <BreadcrumbList>
-                  <BreadcrumbItem className="text-base">
+                  <BreadcrumbItem>
                      <BreadcrumbLink asChild>
                         <Link href="/dashboard">Dashboard</Link>
                      </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
-                  <BreadcrumbItem className="text-base">
+                  <BreadcrumbItem>
                      <BreadcrumbLink asChild>
                         <Link href="/dashboard/post-categories">Categories</Link>
                      </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
-                  <BreadcrumbItem className="text-base">
+                  <BreadcrumbItem>
                      <BreadcrumbPage>New Category</BreadcrumbPage>
                   </BreadcrumbItem>
-                  {/* ... */}
                </BreadcrumbList>
             </Breadcrumb>
          </div>

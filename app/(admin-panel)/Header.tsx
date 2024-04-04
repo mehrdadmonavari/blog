@@ -29,7 +29,7 @@ const Header = ({ isOpen, onResize }: Props) => {
                <SheetTrigger ref={sheetRef} className="lg:hidden">
                   <AlignJustify className="text-slate-500" />
                </SheetTrigger>
-               <SheetContent className="lg:hidden p-0 w-[18rem] overflow-x-hidden">
+               <SheetContent className="lg:hidden p-0 w-[17rem] overflow-x-hidden">
                   <SideBar type="sheet" onResize={onResize} />
                </SheetContent>
             </Sheet>
