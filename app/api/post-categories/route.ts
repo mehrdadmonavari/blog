@@ -35,3 +35,9 @@ export async function POST(req: NextRequest) {
 
    return NextResponse.json(newPostCategory, { status: 201 });
 }
+
+export async function GET(req: NextRequest) {
+   const data = await prisma.postCategory.findMany();
+
+   return NextResponse.json(data, { status: 201 });
+}
