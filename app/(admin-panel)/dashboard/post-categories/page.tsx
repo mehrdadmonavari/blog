@@ -35,12 +35,12 @@ const PostCategoriesPage = async () => {
             </Breadcrumb>
          </div>
          <div className="flex-1 bg-white rounded-lg shadow-lg p-6 my-3">
-            <div className="flex justify-between mb-6">
-               <span className="text-2xl text-slate-700 font-semibold">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-y-4 mb-6">
+               <span className="text-xl sm:text-2xl text-slate-700 font-semibold">
                   Categoriers Reports
                </span>
                <Link href="/dashboard/post-categories/new">
-                  <Button>New categore</Button>
+                  <Button className="w-full">New categore</Button>
                </Link>
             </div>
             <DataTable columns={columns} data={postCategories} />

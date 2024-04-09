@@ -63,12 +63,20 @@ model VerificationToken {
 }
 
 model PostCategory {
-   id          Int    @id @default(autoincrement())
-   name        String @db.VarChar(255)
-   description String @db.Text
+   id          Int      @id @default(autoincrement())
+   name        String   @db.VarChar(255)
+   description String   @db.Text
+   status      Status   @default(ENABEL)
+   createdAt   DateTime @default(now()) @map("created_at")
+   updatedAt   DateTime @updatedAt @map("updated_at")
 
    userId String
    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
    @@map("post_categories")
+}
+
+enum Status {
+   ENABEL
+   DISABLE
 }
