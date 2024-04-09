@@ -12,6 +12,13 @@ import {
    FormLabel,
    FormMessage,
 } from "@/components/ui/form";
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -22,6 +29,7 @@ const createPostCategorySchema = z.object({
    description: z
       .string({ invalid_type_error: "Description field is requered" })
       .min(10, "Description must contain at least 10 character(s)"),
+   status: z.enum(["ENABLE", "DISABLE"]),
 });
 
 type FormData = z.infer<typeof createPostCategorySchema>;
@@ -33,6 +41,7 @@ const PostCategoryNewForm = () => {
       defaultValues: {
          name: "",
          description: "",
+         status: "ENABLE",
       },
    });
 
@@ -71,6 +80,32 @@ const PostCategoryNewForm = () => {
                      </FormItem>
                   )}
                />
+               <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field, fieldState }) => (
+                     <FormItem className="flex-1 h-[100px]">
+                        <FormLabel className="text-slate-500">Status</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                           <FormControl>
+                              <SelectTrigger
+                                 className={`text-slate-700 ${
+                                    fieldState?.invalid && "border-red-500"
+                                 } transition duration-300 focus-visible:outline-none aria-[expanded=true]:border-indigo-500 focus:border-indigo-500 focus:shadow-sm`}>
+                                 <SelectValue />
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              <SelectItem value="ENABLE">enable</SelectItem>
+                              <SelectItem value="DISABLE">disable</SelectItem>
+                           </SelectContent>
+                        </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
+            <div className="flex flex-col md:flex-row justify-center gap-x-10 gap-y-5">
                <FormField
                   control={form.control}
                   name="description"
