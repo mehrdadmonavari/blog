@@ -22,7 +22,7 @@ const SideBar = forwardRef<HTMLElement, Props>(function sidebar({ onResize, type
             <span className="">
                <Image src={favicon} alt="logo" className="w-9" />
             </span>
-            <span className="text-slate-500 text-2xl font-bold">Sneat</span>
+            <span className="min-w-14 text-slate-500 text-2xl font-bold">Admin</span>
             {type === "resizable" ? (
                <Button
                   onClick={onResize}

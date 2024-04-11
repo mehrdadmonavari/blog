@@ -15,7 +15,6 @@ import { columns } from "./columns";
 
 const PostCategoriesPage = async () => {
    const postCategories = await prisma.postCategory.findMany();
-   console.log(postCategories);
 
    return (
       <div className="flex-1 flex flex-col">
@@ -48,5 +47,7 @@ const PostCategoriesPage = async () => {
       </div>
    );
 };
+
+export const dynamic = "force-dynamic";
 
 export default PostCategoriesPage;

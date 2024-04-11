@@ -8,6 +8,7 @@ export type Category = {
    name: string;
    description: string;
    status: Status;
+   createdAt: Date;
 };
 
 export const columns: ColumnDef<Category>[] = [
@@ -18,6 +19,14 @@ export const columns: ColumnDef<Category>[] = [
       header: "Status",
       cell: ({ row }) => {
          return <StatusBadge status={row.getValue("status")} />;
+      },
+   },
+   {
+      accessorKey: "createdAt",
+      header: "Created",
+      cell: ({ row }) => {
+         const date: Date = row.getValue("createdAt");
+         return <div>{date.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})}</div>;
       },
    },
 ];

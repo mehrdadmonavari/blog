@@ -52,6 +52,7 @@ const PostCategoryNewForm = () => {
             values
          );
          router.push("http://localhost:3000/dashboard/post-categories");
+         router.refresh();
       } catch (error) {
          console.log(error);
       }
