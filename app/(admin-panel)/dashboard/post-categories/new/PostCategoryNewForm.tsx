@@ -23,6 +23,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
+import { Textarea } from "@/components/ui/textarea";
 
 const createPostCategorySchema = z.object({
    name: z.string({ invalid_type_error: "Name field is requered" }).min(1).max(255),
@@ -60,13 +63,13 @@ const PostCategoryNewForm = () => {
 
    return (
       <Form {...form}>
-         <form onSubmit={form.handleSubmit(onSubmit)} className="py-6 space-y-6">
-            <div className="flex flex-col md:flex-row justify-center gap-x-10 gap-y-5">
+         <form onSubmit={form.handleSubmit(onSubmit)} className="py-6 space-y-4">
+            <div className="flex flex-col md:flex-row justify-center gap-x-10 gap-y-4 md:gap-y-0">
                <FormField
                   control={form.control}
                   name="name"
                   render={({ field, fieldState }) => (
-                     <FormItem className="flex-1 h-[100px]">
+                     <FormItem className="md:flex-1 h-[100px]">
                         <FormLabel className="text-slate-500">Name</FormLabel>
                         <FormControl>
                            <Input
@@ -85,7 +88,7 @@ const PostCategoryNewForm = () => {
                   control={form.control}
                   name="status"
                   render={({ field, fieldState }) => (
-                     <FormItem className="flex-1 h-[100px]">
+                     <FormItem className="md:flex-1 h-[100px]">
                         <FormLabel className="text-slate-500">Status</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                            <FormControl>
@@ -106,19 +109,19 @@ const PostCategoryNewForm = () => {
                   )}
                />
             </div>
-            <div className="flex flex-col md:flex-row justify-center gap-x-10 gap-y-5">
+            <div className="flex flex-col md:flex-row justify-center gap-x-10 gap-y-4 md:gap-y-0">
                <FormField
                   control={form.control}
                   name="description"
                   render={({ field, fieldState }) => (
-                     <FormItem className="flex-1 h-[100px]">
+                     <FormItem className="md:flex-1 h-[145px]">
                         <FormLabel className="text-slate-500">Description</FormLabel>
                         <FormControl>
-                           <Input
-                              className={`text-slate-700 ${
+                           <Textarea
+                              placeholder="Some description"
+                              className={`resize-none text-slate-700 ${
                                  fieldState?.invalid && "border-red-500"
                               } transition duration-300 focus-visible:border-indigo-500 focus-visible:shadow-sm placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-2.5`}
-                              placeholder="Some description..."
                               {...field}
                            />
                         </FormControl>
