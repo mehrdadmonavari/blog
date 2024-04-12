@@ -67,6 +67,7 @@ model PostCategory {
    name        String   @db.VarChar(255)
    description String   @db.Text
    status      Status   @default(ENABLE)
+   imageUrl    String   @db.Text
    createdAt   DateTime @default(now()) @map("created_at")
    updatedAt   DateTime @updatedAt @map("updated_at")
 
