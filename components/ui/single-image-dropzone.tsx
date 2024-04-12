@@ -1,11 +1,14 @@
 "use client";
+
 import { UploadCloudIcon, X } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
+
 const variants = {
    base: "relative w-full min-h-[150px] min-w-[200px] text-slate-700 rounded-md border border-input flex flex-col justify-center items-center cursor-pointer transition duration-300",
+   invalid: "!border-red-500",
    image: "border-indigo-500 shadow-sm p-0 min-h-0 min-w-0 relative dark:bg-slate-900 rounded-md",
    active: "border-indigo-500 shadow-sm",
    disabled:
@@ -13,16 +16,22 @@ const variants = {
    accept: "border border-blue-500 bg-blue-500 bg-opacity-10",
    reject: "border border-red-700 bg-red-700 bg-opacity-10",
 };
+
 type InputProps = {
    width?: number;
    height?: number;
+   error?: string;
    className?: string;
    value?: File | string;
    onChange?: (file?: File) => void | Promise<void>;
    disabled?: boolean;
    dropzoneOptions?: Omit<DropzoneOptions, "disabled">;
 };
+
 const ERROR_MESSAGES = {
+   fileRequired(name: string) {
+      return `${name} field is required`;
+   },
    fileTooLarge(maxSize: number) {
       return `The file is too large. Max size is ${formatFileSize(maxSize)}.`;
    },
@@ -36,8 +45,12 @@ const ERROR_MESSAGES = {
       return "The file is not supported.";
    },
 };
+
 const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
-   ({ dropzoneOptions, width, height, value, className, disabled, onChange }, ref) => {
+   (
+      { dropzoneOptions, width, height, error, value, className, disabled, onChange },
+      ref
+   ) => {
       const imageUrl = React.useMemo(() => {
          if (typeof value === "string") {
             // in case a url is passed in, use it to display the image
@@ -58,7 +71,12 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
          isDragAccept,
          isDragReject,
       } = useDropzone({
-         accept: { "image/*": [] },
+         accept: {
+            "image/jpeg": [".jpeg"],
+            "image/jpg": [".jpg"],
+            "image/png": [".png"],
+         },
+         maxFiles: 1,
          multiple: false,
          disabled,
          onDrop: (acceptedFiles) => {
@@ -74,6 +92,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
          () =>
             twMerge(
                variants.base,
+               error && variants.invalid,
                isFocused && variants.active,
                disabled && variants.disabled,
                imageUrl && variants.image,
@@ -89,10 +108,14 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
             isDragReject,
             disabled,
             className,
+            error,
          ]
       );
       // error validation messages
       const errorMessage = React.useMemo(() => {
+         if (error) {
+            return error;
+         }
          if (fileRejections[0]) {
             const { errors } = fileRejections[0];
             if (errors[0]?.code === "file-too-large") {
@@ -106,9 +129,10 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
             }
          }
          return undefined;
-      }, [fileRejections, dropzoneOptions]);
+      }, [fileRejections, dropzoneOptions, error]);
+
       return (
-         <div className="">
+         <div className="space-y-2">
             <div
                {...getRootProps({
                   className: dropZoneClassName,
@@ -160,11 +184,12 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                )}
             </div>
             {/* Error Text */}
-            <div className="mt-1 text-xs text-red-500">{errorMessage}</div>
+            <p className="text-sm font-medium text-destructive">{errorMessage}</p>
          </div>
       );
    }
 );
+
 SingleImageDropzone.displayName = "SingleImageDropzone";
 const Button = React.forwardRef<
    HTMLButtonElement,
@@ -186,6 +211,7 @@ const Button = React.forwardRef<
       />
    );
 });
+
 Button.displayName = "Button";
 function formatFileSize(bytes?: number) {
    if (!bytes) {
