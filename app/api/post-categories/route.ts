@@ -7,12 +7,14 @@ const createPostCategorySchema = z.object({
    name: z.string().min(1).max(255),
    description: z.string().min(10),
    status: z.enum(["ENABLE", "DISABLE"]),
+   imageUrl: z.string(),
 });
 
 interface PostCategoryData {
    name: string;
    description: string;
    status: "ENABLE" | "DISABLE";
+   imageUrl: string;
    userId: string;
 }
 
@@ -36,6 +38,7 @@ export async function POST(req: NextRequest) {
       name: body.name,
       description: body.description,
       status: body.status,
+      imageUrl: body.imageUrl,
       userId: user?.id!,
    };
 

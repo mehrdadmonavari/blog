@@ -71,22 +71,38 @@ const PostCategoryNewForm = () => {
    });
 
    const onSubmit = async (values: FormData) => {
+      const newFormValues = {
+         name: values.name,
+         description: values.description,
+         status: values.status,
+         imageUrl: "",
+      };
+
       if (!values.image) {
          console.log("image does not exist");
          return;
       }
-      console.log(values.image);
-      
-      // try {
-      //    const { data } = await axios.post(
-      //       "http://localhost:3000/api/post-categories",
-      //       values
-      //    );
-      //    router.push("http://localhost:3000/dashboard/post-categories");
-      //    router.refresh();
-      // } catch (error) {
-      //    console.log(error);
-      // }
+      const file: File = values.image;
+
+      try {
+         const res = await edgestore.publicFiles.upload({file});
+         console.log(res);
+         newFormValues.imageUrl = res.url;
+      } catch (error) {
+         console.log("error in upload image", error);
+         return;
+      }
+
+      try {
+         const { data } = await axios.post(
+            "http://localhost:3000/api/post-categories",
+            newFormValues
+         );
+         router.push("http://localhost:3000/dashboard/post-categories");
+         router.refresh();
+      } catch (error) {
+         console.log(error);
+      }
    };
 
    return (
