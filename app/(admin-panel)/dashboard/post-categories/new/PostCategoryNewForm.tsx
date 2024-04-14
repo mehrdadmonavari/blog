@@ -27,6 +27,7 @@ import "easymde/dist/easymde.min.css";
 import { Textarea } from "@/components/ui/textarea";
 import { SingleImageDropzone } from "@/components/ui/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
+import Spinner from "@/components/ui/spinner";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
 
@@ -58,8 +59,8 @@ type FormData = z.infer<typeof createPostCategorySchema>;
 
 const PostCategoryNewForm = () => {
    const router = useRouter();
-   // const [file, setFile] = useState<File>();
    const { edgestore } = useEdgeStore();
+   const [isSubmitting, setIsSubmitting] = useState(false);
 
    const form = useForm<FormData>({
       resolver: zodResolver(createPostCategorySchema),
@@ -71,6 +72,7 @@ const PostCategoryNewForm = () => {
    });
 
    const onSubmit = async (values: FormData) => {
+      setIsSubmitting(true);
       const newFormValues = {
          name: values.name,
          description: values.description,
@@ -80,16 +82,17 @@ const PostCategoryNewForm = () => {
 
       if (!values.image) {
          console.log("image does not exist");
+         setIsSubmitting(false);
          return;
       }
       const file: File = values.image;
 
       try {
-         const res = await edgestore.publicFiles.upload({file});
-         console.log(res);
+         const res = await edgestore.publicFiles.upload({ file });
          newFormValues.imageUrl = res.url;
       } catch (error) {
          console.log("error in upload image", error);
+         setIsSubmitting(false);
          return;
       }
 
@@ -98,9 +101,11 @@ const PostCategoryNewForm = () => {
             "http://localhost:3000/api/post-categories",
             newFormValues
          );
+         setIsSubmitting(false);
          router.push("http://localhost:3000/dashboard/post-categories");
          router.refresh();
       } catch (error) {
+         setIsSubmitting(false);
          console.log(error);
       }
    };
@@ -173,20 +178,6 @@ const PostCategoryNewForm = () => {
                      </FormItem>
                   )}
                />
-               {/* <div className="space-y-2 md:flex-1 h-[255px]">
-                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-500">
-                     Image
-                  </label>
-                  <SingleImageDropzone
-                     className="min-h-[200px]"
-                     error=""
-                     dropzoneOptions={{ maxSize: 1025 * 1024 * 1 }}
-                     value={file}
-                     onChange={(file) => {
-                        setFile(file);
-                     }}
-                  />
-               </div> */}
                <FormField
                   control={form.control}
                   name="image"
@@ -197,19 +188,21 @@ const PostCategoryNewForm = () => {
                            <SingleImageDropzone
                               className="min-h-[200px]"
                               error={fieldState.invalid ? fieldState.error?.message : ""}
-                              // value={file}
-                              // onChange={(file) => {
-                              //    setFile(file);
-                              // }}
                               {...field}
                            />
                         </FormControl>
-                        {/* <FormMessage /> */}
                      </FormItem>
                   )}
                />
             </div>
-            <Button type="submit">Submit</Button>
+            <Button
+               className={`flex gap-x-3 ${
+                  isSubmitting && "min-w-[84px] flex justify-center"
+               }`}
+               type="submit"
+               disabled={isSubmitting}>
+               {isSubmitting ? <Spinner /> : "Submit"}
+            </Button>
          </form>
       </Form>
    );
