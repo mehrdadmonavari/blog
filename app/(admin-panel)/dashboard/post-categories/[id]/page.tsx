@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
 import StatusBadge from "../StatusBadge";
+import Image from "next/image";
+import ImageBox from "@/components/ui/Image";
 
 interface Props {
    params: { id: string };
@@ -58,6 +60,7 @@ const PostCategoryDetailPage = async ({ params: { id } }: Props) => {
                   <Button className="w-full">Update categore</Button>
                </Link>
             </div>
+
             <div className="flex flex-col gap-y-1">
                <div className="text-xl font-semibold text-slate-700">{category.name}</div>
                <div className="flex items-center gap-x-2">
@@ -72,6 +75,13 @@ const PostCategoryDetailPage = async ({ params: { id } }: Props) => {
                   <StatusBadge status={category.status} />
                </div>
                <div className="mt-4">{category.description}</div>
+               <div className="mt-4 flex justify-start items-start">
+                  <ImageBox
+                     width="900"
+                     imageUrl={category.imageUrl}
+                     alt={category.name}
+                  />
+               </div>
             </div>
          </div>
       </div>

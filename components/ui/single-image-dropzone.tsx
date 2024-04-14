@@ -5,6 +5,7 @@ import Image from "next/image";
 import * as React from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
+import ImageBox from "./Image";
 
 const variants = {
    base: "relative w-full min-h-[150px] min-w-[200px] text-slate-700 rounded-md border border-input flex flex-col justify-center items-center cursor-pointer transition duration-300",
@@ -145,16 +146,11 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                <input ref={ref} {...getInputProps()} />
                {imageUrl ? (
                   // Image Preview
-                  <div className="w-[300px] h-auto">
-                     <div className="h-0 pb-[60%] relative">
-                        <Image
-                           fill
-                           className="h-full w-full rounded-md object-cover"
-                           src={imageUrl}
-                           alt={acceptedFiles[0]?.name}
-                        />
-                     </div>
-                  </div>
+                  <ImageBox
+                     width="300"
+                     imageUrl={imageUrl}
+                     alt={acceptedFiles[0]?.name}
+                  />
                ) : (
                   // Upload Icon
                   <div className="flex flex-col items-center justify-center font-medium text-sm text-slate-400 transition-all duration-300 focus-visible:translate-x-2.5">
