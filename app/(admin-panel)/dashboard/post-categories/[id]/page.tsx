@@ -13,7 +13,8 @@ import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
 import StatusBadge from "../StatusBadge";
 import Image from "next/image";
-import ImageBox from "@/components/ui/Image";
+import ImageBox from "@/components/ui/ImageBox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
    params: { id: string };
@@ -51,7 +52,9 @@ const PostCategoryDetailPage = async ({ params: { id } }: Props) => {
                </BreadcrumbList>
             </Breadcrumb>
          </div>
-         <div className="flex-1 bg-white rounded-lg shadow-lg p-6 my-3">
+
+
+         <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-6 my-3 max-h-[calc(100vh-11.5rem)]">
             <div className="flex flex-col sm:flex-row sm:justify-between gap-y-4 mb-6">
                <span className="text-xl sm:text-2xl text-slate-700 font-semibold">
                   Categoriers Reports
@@ -61,28 +64,32 @@ const PostCategoryDetailPage = async ({ params: { id } }: Props) => {
                </Link>
             </div>
 
-            <div className="flex flex-col gap-y-1">
-               <div className="text-xl font-semibold text-slate-700">{category.name}</div>
-               <div className="flex items-center gap-x-2">
-                  <span className="font-normal text-sm text-slate-500">
-                     {category.createdAt.toLocaleDateString("en-us", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                     })}
-                  </span>
-                  <StatusBadge status={category.status} />
+            <ScrollArea className="">
+               <div className="flex flex-col gap-y-1">
+                  <div className="text-xl font-semibold text-slate-700">
+                     {category.name}
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                     <span className="font-normal text-sm text-slate-500">
+                        {category.createdAt.toLocaleDateString("en-us", {
+                           weekday: "long",
+                           year: "numeric",
+                           month: "short",
+                           day: "numeric",
+                        })}
+                     </span>
+                     <StatusBadge status={category.status} />
+                  </div>
+                  <div className="mt-4 text-slate-700">{category.description}</div>
+                  <div className="mt-4 flex justify-start items-start">
+                     <ImageBox
+                        width={{xs: "full", lg: "900"}}
+                        imageUrl={category.imageUrl}
+                        alt={category.name}
+                     />
+                  </div>
                </div>
-               <div className="mt-4">{category.description}</div>
-               <div className="mt-4 flex justify-start items-start">
-                  <ImageBox
-                     width="900"
-                     imageUrl={category.imageUrl}
-                     alt={category.name}
-                  />
-               </div>
-            </div>
+            </ScrollArea>
          </div>
       </div>
    );
