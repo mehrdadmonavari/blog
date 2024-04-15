@@ -9,6 +9,17 @@ import {
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import {
+   AlertDialog,
+   AlertDialogAction,
+   AlertDialogCancel,
+   AlertDialogContent,
+   AlertDialogDescription,
+   AlertDialogFooter,
+   AlertDialogHeader,
+   AlertDialogTitle,
+   AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Props {
    id: number;
@@ -18,7 +29,9 @@ const StatusActionsButton = ({ id }: Props) => {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center justify-center text-center h-8 w-8 p-0">
+            <Button
+               variant="ghost"
+               className="flex items-center justify-center text-center h-8 w-8 p-0">
                <span className="sr-only">Open menu</span>
                <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -37,8 +50,10 @@ const StatusActionsButton = ({ id }: Props) => {
             <DropdownMenuItem
                className="text-slate-700 font-medium cursor-pointer transition duration-300 hover:!bg-red-100 hover:!text-red-500"
                onClick={() => console.log("clicked on delete")}>
-               <Trash2 className="w-5 mr-1.5" />
-               Delete Category
+               <AlertDialogTrigger className="flex justify-center items-center">
+                  <Trash2 className="w-5 mr-1.5" />
+                  Delete Category
+               </AlertDialogTrigger>
             </DropdownMenuItem>
          </DropdownMenuContent>
       </DropdownMenu>

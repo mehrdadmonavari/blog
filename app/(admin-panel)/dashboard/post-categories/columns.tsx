@@ -3,6 +3,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "./StatusBadge";
 import { Status } from "@prisma/client";
 import StatusActionsButton from "./StatusActionsButton";
+import {
+   AlertDialog,
+   AlertDialogAction,
+   AlertDialogCancel,
+   AlertDialogContent,
+   AlertDialogDescription,
+   AlertDialogFooter,
+   AlertDialogHeader,
+   AlertDialogTitle,
+   AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export type Category = {
    id: number;
@@ -51,7 +62,22 @@ export const columns: ColumnDef<Category>[] = [
 
          return (
             <div className="flex justify-end text-right w-full pr-3">
-               <StatusActionsButton id={category.id} />
+               <AlertDialog>
+                  <StatusActionsButton id={category.id} />
+                  <AlertDialogContent>
+                     <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                        <AlertDialogDescription>
+                           Are you sure you want to delete this category, this action
+                           cannot be undone
+                        </AlertDialogDescription>
+                     </AlertDialogHeader>
+                     <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction>Continue</AlertDialogAction>
+                     </AlertDialogFooter>
+                  </AlertDialogContent>
+               </AlertDialog>
             </div>
          );
       },
