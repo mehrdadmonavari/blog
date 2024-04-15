@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "./StatusBadge";
 import { Status } from "@prisma/client";
-import StatusActionsButton from "./StatusActionsButton";
+import PostCategoryActionsButton from "./PostCategoryActionsButton";
 import {
    AlertDialog,
    AlertDialogAction,
@@ -12,7 +12,6 @@ import {
    AlertDialogFooter,
    AlertDialogHeader,
    AlertDialogTitle,
-   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 export type Category = {
@@ -62,22 +61,7 @@ export const columns: ColumnDef<Category>[] = [
 
          return (
             <div className="flex justify-end text-right w-full pr-3">
-               <AlertDialog>
-                  <StatusActionsButton id={category.id} />
-                  <AlertDialogContent>
-                     <AlertDialogHeader>
-                        <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                        <AlertDialogDescription>
-                           Are you sure you want to delete this category, this action
-                           cannot be undone
-                        </AlertDialogDescription>
-                     </AlertDialogHeader>
-                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction>Continue</AlertDialogAction>
-                     </AlertDialogFooter>
-                  </AlertDialogContent>
-               </AlertDialog>
+               <PostCategoryActionsButton id={category.id} />
             </div>
          );
       },
