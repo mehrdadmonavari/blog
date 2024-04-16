@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +35,7 @@ const ACCEPTED_IMAGE_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
 const ACCEPTED_IMAGE_TYPES = ["jpeg", "jpg", "png"];
 
-const createPostCategorySchema = z.object({
+const editPostCategorySchema = z.object({
    name: z.string({ invalid_type_error: "Name field is required" }).min(1).max(255),
    description: z
       .string({ invalid_type_error: "Description field is required" })
@@ -55,15 +55,19 @@ const createPostCategorySchema = z.object({
       }, `Max image size is 1MB.`),
 });
 
-type FormData = z.infer<typeof createPostCategorySchema>;
+type FormData = z.infer<typeof editPostCategorySchema>;
 
-const PostCategoryNewForm = () => {
+const EditPostCategoryForm = () => {
    const router = useRouter();
    const { edgestore } = useEdgeStore();
    const [isSubmitting, setIsSubmitting] = useState(false);
 
+   useEffect(() => {
+      console.log("useEffect called");
+   }, []);
+
    const form = useForm<FormData>({
-      resolver: zodResolver(createPostCategorySchema),
+      resolver: zodResolver(editPostCategorySchema),
       defaultValues: {
          name: "",
          description: "",
@@ -208,4 +212,4 @@ const PostCategoryNewForm = () => {
    );
 };
 
-export default PostCategoryNewForm;
+export default EditPostCategoryForm;

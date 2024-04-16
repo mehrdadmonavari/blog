@@ -1,3 +1,5 @@
+import React from "react";
+import Link from "next/link";
 import {
    Breadcrumb,
    BreadcrumbItem,
@@ -6,9 +8,7 @@ import {
    BreadcrumbPage,
    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Link from "next/link";
-import React from "react";
-import PostCategoryNewForm from "./PostCategoryNewForm";
+import NewPostCategoryForm from "./NewPostCategoryForm";
 
 const NewPostCategoryPage = () => {
    return (
@@ -38,7 +38,7 @@ const NewPostCategoryPage = () => {
             <div className="text-2xl text-slate-700 font-semibold">
                New category registration
             </div>
-            <PostCategoryNewForm />
+            <NewPostCategoryForm />
          </div>
       </div>
    );
