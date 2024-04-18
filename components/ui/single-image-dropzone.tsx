@@ -1,7 +1,6 @@
 "use client";
 
 import { UploadCloudIcon, X } from "lucide-react";
-import Image from "next/image";
 import * as React from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
@@ -24,6 +23,7 @@ type InputProps = {
    error?: string;
    className?: string;
    value?: File | string;
+   default?: string;
    onChange?: (file?: File) => void | Promise<void>;
    disabled?: boolean;
    dropzoneOptions?: Omit<DropzoneOptions, "disabled">;
@@ -149,7 +149,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                   <ImageBox
                      width={{ xs: "300", sm: "300", md: "300", lg: "300" }}
                      imageUrl={imageUrl}
-                     alt={acceptedFiles[0]?.name}
+                     alt={acceptedFiles[0] ? acceptedFiles[0]?.name : "image"}
                   />
                ) : (
                   // Upload Icon

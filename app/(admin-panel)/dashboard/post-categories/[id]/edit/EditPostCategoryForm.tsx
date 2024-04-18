@@ -36,51 +36,61 @@ const ACCEPTED_IMAGE_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const ACCEPTED_IMAGE_TYPES = ["jpeg", "jpg", "png"];
 
 const editPostCategorySchema = z.object({
-   name: z.string({ invalid_type_error: "Name field is required" }).min(1).max(255),
+   name: z
+      .string({ invalid_type_error: "Name field is required" })
+      .min(1)
+      .max(255)
+      .optional(),
    description: z
       .string({ invalid_type_error: "Description field is required" })
       .min(10, "Description must contain at least 10 character(s)"),
    status: z.enum(["ENABLE", "DISABLE"]),
-   image: z
-      .any()
-      .refine((files) => {
-         return files !== undefined;
-      }, `Image field is required`)
-      .refine(
-         (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.type),
-         "Only .jpg, .jpeg and .png formats are supported."
-      )
-      .refine((files) => {
-         return files?.size <= MAX_FILE_SIZE;
-      }, `Max image size is 1MB.`),
+   image: z.union([
+      z.string(),
+      z
+         .any()
+         .refine((files) => {
+            return files !== "string" && files !== undefined;
+         }, `Image field is required`)
+         .refine(
+            (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.type),
+            "Only .jpg, .jpeg and .png formats are supported."
+         )
+         .refine((files) => {
+            return files?.size <= MAX_FILE_SIZE;
+         }, `Max image size is 1MB.`),
+   ]),
 });
 
 type FormData = z.infer<typeof editPostCategorySchema>;
 
-const EditPostCategoryForm = () => {
-   const router = useRouter();
+interface Props {
+   category: Category;
+}
+
+const EditPostCategoryForm = ({ category }: Props) => {
    const { edgestore } = useEdgeStore();
    const [isSubmitting, setIsSubmitting] = useState(false);
-
-   useEffect(() => {
-      console.log("useEffect called");
-   }, []);
+   const file = edgestore.publicFiles;
+   const router = useRouter();
 
    const form = useForm<FormData>({
       resolver: zodResolver(editPostCategorySchema),
       defaultValues: {
-         name: "",
-         description: "",
-         status: "ENABLE",
+         name: category ? category!.name : "",
+         description: category ? category!.description : "",
+         status: category ? category!.status : "ENABLE",
+         image: category ? category.imageUrl : "",
       },
    });
 
    const onSubmit = async (values: FormData) => {
       setIsSubmitting(true);
       const newFormValues = {
-         name: values.name,
-         description: values.description,
-         status: values.status,
+         name: values.name !== category.name ? values.name : null,
+         description:
+            values.description !== category.description ? values.description : null,
+         status: values.status !== category.status ? values.status : null,
          imageUrl: "",
       };
 
@@ -89,29 +99,37 @@ const EditPostCategoryForm = () => {
          setIsSubmitting(false);
          return;
       }
-      const file: File = values.image;
 
-      try {
-         const res = await edgestore.publicFiles.upload({ file });
-         newFormValues.imageUrl = res.url;
-      } catch (error) {
-         console.log("error in upload image", error);
-         setIsSubmitting(false);
-         return;
-      }
+      if (typeof values.image !== "string") {
+         const file: File = values.image;
 
-      try {
-         const { data } = await axios.post(
-            "http://localhost:3000/api/post-categories",
-            newFormValues
-         );
-         setIsSubmitting(false);
-         router.push("http://localhost:3000/dashboard/post-categories");
-         router.refresh();
-      } catch (error) {
-         setIsSubmitting(false);
-         console.log(error);
+         try {
+            const res = await edgestore.publicFiles.upload({
+               file,
+               options: {
+                  replaceTargetUrl: values.image,
+               },
+            });
+            newFormValues.imageUrl = res.url;
+         } catch (error) {
+            console.log("error in upload image", error);
+            setIsSubmitting(false);
+            return;
+         }
       }
+      
+      // try {
+      //    const { data } = await axios.post(
+      //       "http://localhost:3000/api/post-categories",
+      //       newFormValues
+      //    );
+      //    setIsSubmitting(false);
+      //    router.push("http://localhost:3000/dashboard/post-categories");
+      //    router.refresh();
+      // } catch (error) {
+      //    setIsSubmitting(false);
+      //    console.log(error);
+      // }
    };
 
    return (
@@ -191,6 +209,8 @@ const EditPostCategoryForm = () => {
                         <FormControl>
                            <SingleImageDropzone
                               className="min-h-[200px]"
+                              // default={category.imageUrl}
+                              // value={category.imageUrl}
                               error={fieldState.invalid ? fieldState.error?.message : ""}
                               {...field}
                            />

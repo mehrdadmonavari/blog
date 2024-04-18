@@ -8,7 +8,7 @@ import {
    BreadcrumbPage,
    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import EditPostCategoryForm from "./EditPostCateegoryForm";
+import EditPostCategoryForm from "./EditPostCategoryForm";
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/client";
 
