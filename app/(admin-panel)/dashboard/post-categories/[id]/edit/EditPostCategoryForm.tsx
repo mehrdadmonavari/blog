@@ -86,7 +86,8 @@ const EditPostCategoryForm = ({ category }: Props) => {
 
    const onSubmit = async (values: FormData) => {
       setIsSubmitting(true);
-      const newFormValues = {
+
+      const newFormValues: {[index: string]: any} = {
          name: values.name !== category.name ? values.name : null,
          description:
             values.description !== category.description ? values.description : null,
@@ -102,12 +103,12 @@ const EditPostCategoryForm = ({ category }: Props) => {
 
       if (typeof values.image !== "string") {
          const file: File = values.image;
-
+         
          try {
             const res = await edgestore.publicFiles.upload({
                file,
                options: {
-                  replaceTargetUrl: values.image,
+                  replaceTargetUrl: category.imageUrl,
                },
             });
             newFormValues.imageUrl = res.url;
@@ -117,19 +118,24 @@ const EditPostCategoryForm = ({ category }: Props) => {
             return;
          }
       }
+
+      for (const prop in newFormValues) {
+         if (newFormValues[prop] === null || newFormValues[prop] === "")
+            delete newFormValues[prop];
+      }
       
-      // try {
-      //    const { data } = await axios.post(
-      //       "http://localhost:3000/api/post-categories",
-      //       newFormValues
-      //    );
-      //    setIsSubmitting(false);
-      //    router.push("http://localhost:3000/dashboard/post-categories");
-      //    router.refresh();
-      // } catch (error) {
-      //    setIsSubmitting(false);
-      //    console.log(error);
-      // }
+      try {
+         const { data } = await axios.patch(
+            `http://localhost:3000/api/post-categories/${category.id}`,
+            newFormValues
+         );
+         setIsSubmitting(false);
+         router.push("http://localhost:3000/dashboard/post-categories");
+         router.refresh();
+      } catch (error) {
+         setIsSubmitting(false);
+         console.log(error);
+      }
    };
 
    return (
