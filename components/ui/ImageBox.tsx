@@ -7,6 +7,7 @@ interface Width {
    sm?: string;
    md?: string;
    lg?: string;
+   xl?: string;
 }
 
 interface Props {
@@ -49,12 +50,20 @@ const widthMap: Record<string, Record<string, string>> = {
       "700": "lg:w-[700px]",
       "900": "lg:w-[900px]",
    },
+   xl: {
+      full: "xl:w-full",
+      "150": "xl:w-[150px]",
+      "300": "xl:w-[300px]",
+      "500": "xl:w-[500px]",
+      "700": "xl:w-[700px]",
+      "900": "xl:w-[900px]",
+   },
 };
 
 const ImageBox = ({ width, imageUrl, alt }: Props) => {
    return (
       <div
-         className={`${width.xs && widthMap.xs[width.xs]} ${width.sm && widthMap.sm[width.sm]} ${width.md && widthMap.md[width.md]} ${width.lg && widthMap.lg[width.lg]} h-auto rounded-lg`}
+         className={`${width.xs && widthMap.xs[width.xs]} ${width.sm && widthMap.sm[width.sm]} ${width.md && widthMap.md[width.md]} ${width.lg && widthMap.lg[width.lg]} ${width.xl && widthMap.xl[width.xl]} h-auto rounded-lg`}
          // className={`w-full h-auto rounded-lg`}
          >
          <div className="h-0 pb-[60%] relative">

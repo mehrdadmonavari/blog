@@ -64,28 +64,30 @@ const PostCategoryDetailPage = async ({ params: { id } }: Props) => {
             </div>
 
             <ScrollArea className="">
-               <div className="flex flex-col gap-y-1">
-                  <div className="text-xl font-semibold text-slate-700">
-                     {category.name}
-                  </div>
-                  <div className="flex items-center gap-x-2">
-                     <span className="font-normal text-sm text-slate-500">
-                        {category.createdAt.toLocaleDateString("en-us", {
-                           weekday: "long",
-                           year: "numeric",
-                           month: "short",
-                           day: "numeric",
-                        })}
-                     </span>
-                     <StatusBadge status={category.status} />
-                  </div>
-                  <div className="mt-4 text-slate-700">{category.description}</div>
-                  <div className="mt-4 flex justify-start items-start">
-                     <ImageBox
-                        width={{xs: "full", lg: "900"}}
-                        imageUrl={category.imageUrl}
-                        alt={category.name}
-                     />
+               <div className="">
+                  <div className="flex flex-col gap-y-1">
+                     <div className="text-xl font-semibold text-slate-700">
+                        {category.name}
+                     </div>
+                     <div className="flex items-center gap-x-2">
+                        <span className="font-normal text-sm text-slate-500">
+                           {category.createdAt.toLocaleDateString("en-us", {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                           })}
+                        </span>
+                        <StatusBadge status={category.status} />
+                     </div>
+                     <div className="mt-4 text-slate-700">{category.description}</div>
+                     <div className="mt-4 flex justify-start items-start">
+                        <ImageBox
+                           width={{ xs: "full", xl: "900" }}
+                           imageUrl={category.imageUrl}
+                           alt={category.name}
+                        />
+                     </div>
                   </div>
                </div>
             </ScrollArea>
