@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Eye, MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useEdgeStore } from "@/lib/edgestore";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
    id: number;
@@ -31,6 +31,24 @@ interface Props {
 const PostCategoryActionsButton = ({ id }: Props) => {
    const { edgestore } = useEdgeStore();
    const router = useRouter();
+   const searchParams = useSearchParams();
+      
+   const createQueryString = useCallback(
+      ({
+         path,
+         queries,
+      }: {
+         path: string;
+         queries: { name: string; value: string }[];
+      }) => {
+         const params = new URLSearchParams(searchParams.toString());
+         queries.map((query) => {
+            params.set(query.name, query.value);
+         });
+         return path + "?" + params.toString();
+      },
+      [searchParams]
+   );
 
    const handleDelete = async (id: number) => {
       try {
@@ -39,8 +57,17 @@ const PostCategoryActionsButton = ({ id }: Props) => {
          );
          await edgestore.publicFiles.delete({ url: data.imageUrl });
          await axios.delete(`http://localhost:3000/api/post-categories/${id}`);
-         console.log("category deleted successfully");
-         router.refresh()
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/post-categories",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "category deleted successfully" },
+            ],
+         });
+         router.push(url);
+         router.refresh();
       } catch (error) {
          console.log(error);
       }
@@ -70,9 +97,7 @@ const PostCategoryActionsButton = ({ id }: Props) => {
                      edit Category
                   </DropdownMenuItem>
                </Link>
-               <DropdownMenuItem
-                  className="text-slate-700 font-medium cursor-pointer transition duration-300 hover:!bg-red-100 hover:!text-red-500"
-                  onClick={() => console.log("clicked on delete")}>
+               <DropdownMenuItem className="text-slate-700 font-medium cursor-pointer transition duration-300 hover:!bg-red-100 hover:!text-red-500">
                   <AlertDialogTrigger className="flex justify-center items-center">
                      <Trash2 className="w-5 mr-1.5" />
                      Delete Category

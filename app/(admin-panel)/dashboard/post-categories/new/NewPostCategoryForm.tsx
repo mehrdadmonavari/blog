@@ -126,7 +126,7 @@ const NewPostCategoryForm = () => {
                { name: "dialog", value: "open" },
                { name: "dialogType", value: "SUCCESS" },
                { name: "dialogTitle", value: "successfull" },
-               { name: "dialogDescription", value: "category edited successfully" },
+               { name: "dialogDescription", value: "category created successfully" },
             ],
          });
          router.push(url);

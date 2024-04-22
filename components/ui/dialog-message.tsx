@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
    Dialog,
    DialogClose,
@@ -20,33 +20,15 @@ const DialogMessage = ({ children }: Props) => {
    const [isOpen, setIsOpen] = useState(false);
    const searchParams = useSearchParams();
    const [dialogState, setDialogState] = useState<string | null>();
-   const [dialogType, setDialogType] = useState<"SUCCESS" | "ERROR" | "INFO">();
+   const [dialogType, setDialogType] = useState<string | null>();
    const [dialogTitle, setDialogTitle] = useState<string | null>();
    const [dialogDescription, setDialogDescription] = useState<string | null>();
    const pathName = usePathname();
    const router = useRouter();
 
-   const typeMap: Record<
-      "SUCCESS" | "ERROR" | "INFO",
-      { name: string; iconType: ReactElement }
-   > = {
-      SUCCESS: {
-         name: "success",
-         iconType: <CircleCheck className="w-20 h-20 text-green-500" />,
-      },
-      ERROR: {
-         name: "error",
-         iconType: <CircleX className="w-20 h-20 text-red-500" />,
-      },
-      INFO: {
-         name: "info",
-         iconType: <Info className="w-20 h-20 text-slate-500" />,
-      },
-   };
-
    useEffect(() => {
       searchParams.has("dialog") && setDialogState(searchParams.get("dialog"));
-      searchParams.has("dialogType") && setDialogState(searchParams.get("dialogType"));
+      searchParams.has("dialogType") && setDialogType(searchParams.get("dialogType"));
       searchParams.has("dialogTitle") && setDialogTitle(searchParams.get("dialogTitle"));
       searchParams.has("dialogDescription") &&
          setDialogDescription(searchParams.get("dialogDescription"));
@@ -62,7 +44,13 @@ const DialogMessage = ({ children }: Props) => {
          <DialogContent>
             <DialogHeader>
                <div className="flex justify-center items-center">
-                  {dialogType && typeMap[dialogType].iconType}
+                  {dialogType === "SUCCESS" && (
+                     <CircleCheck className="w-20 h-20 text-green-500" />
+                  )}
+                  {dialogType === "ERROR" && (
+                     <CircleX className="w-20 h-20 text-red-500" />
+                  )}
+                  {dialogType === "INFO" && <Info className="w-20 h-20 text-slate-500" />}
                </div>
                <DialogTitle className="font-semibold text-2xl text-center pt-4">
                   {dialogTitle}
