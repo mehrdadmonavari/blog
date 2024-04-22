@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import "easymde/dist/easymde.min.css";
 import { Textarea } from "@/components/ui/textarea";
 import { SingleImageDropzone } from "@/components/ui/single-image-dropzone";
@@ -73,6 +73,33 @@ const EditPostCategoryForm = ({ category }: Props) => {
    const [isSubmitting, setIsSubmitting] = useState(false);
    const file = edgestore.publicFiles;
    const router = useRouter();
+   const searchParams = useSearchParams();
+   
+   const createQueryString = useCallback(
+      ({
+         path,
+         queries,
+      }: {
+         path: string;
+         queries: { name: string; value: string }[];
+      }) => {
+         const params = new URLSearchParams(searchParams.toString());
+         queries.map((query) => {
+            params.set(query.name, query.value);
+         });
+         return path + "?" + params.toString();
+      },
+      [searchParams]
+   );
+
+   const deleteQueryString = useCallback(
+      (name: string, value: string) => {
+         const params = new URLSearchParams(searchParams.toString());
+         params.delete(name, value);
+         return params.toString();
+      },
+      [searchParams]
+   );
 
    const form = useForm<FormData>({
       resolver: zodResolver(editPostCategorySchema),
@@ -84,58 +111,71 @@ const EditPostCategoryForm = ({ category }: Props) => {
       },
    });
 
+   // const onSubmit = async (values: FormData) => {
+   //    setIsSubmitting(true);
+
+   //    const newFormValues: {[index: string]: any} = {
+   //       name: values.name !== category.name ? values.name : null,
+   //       description:
+   //          values.description !== category.description ? values.description : null,
+   //       status: values.status !== category.status ? values.status : null,
+   //       imageUrl: "",
+   //    };
+
+   //    if (!values.image) {
+   //       console.log("image does not exist");
+   //       setIsSubmitting(false);
+   //       return;
+   //    }
+
+   //    if (typeof values.image !== "string") {
+   //       const file: File = values.image;
+
+   //       try {
+   //          const res = await edgestore.publicFiles.upload({
+   //             file,
+   //             options: {
+   //                replaceTargetUrl: category.imageUrl,
+   //             },
+   //          });
+   //          newFormValues.imageUrl = res.url;
+   //       } catch (error) {
+   //          console.log("error in upload image", error);
+   //          setIsSubmitting(false);
+   //          return;
+   //       }
+   //    }
+
+   //    for (const prop in newFormValues) {
+   //       if (newFormValues[prop] === null || newFormValues[prop] === "")
+   //          delete newFormValues[prop];
+   //    }
+
+   //    try {
+   //       const { data } = await axios.patch(
+   //          `http://localhost:3000/api/post-categories/${category.id}`,
+   //          newFormValues
+   //       );
+   //       setIsSubmitting(false);
+   //       router.push("http://localhost:3000/dashboard/post-categories");
+   //       router.refresh();
+   //    } catch (error) {
+   //       setIsSubmitting(false);
+   //       console.log(error);
+   //    }
+   // };
+
    const onSubmit = async (values: FormData) => {
-      setIsSubmitting(true);
-
-      const newFormValues: {[index: string]: any} = {
-         name: values.name !== category.name ? values.name : null,
-         description:
-            values.description !== category.description ? values.description : null,
-         status: values.status !== category.status ? values.status : null,
-         imageUrl: "",
-      };
-
-      if (!values.image) {
-         console.log("image does not exist");
-         setIsSubmitting(false);
-         return;
-      }
-
-      if (typeof values.image !== "string") {
-         const file: File = values.image;
-         
-         try {
-            const res = await edgestore.publicFiles.upload({
-               file,
-               options: {
-                  replaceTargetUrl: category.imageUrl,
-               },
-            });
-            newFormValues.imageUrl = res.url;
-         } catch (error) {
-            console.log("error in upload image", error);
-            setIsSubmitting(false);
-            return;
-         }
-      }
-
-      for (const prop in newFormValues) {
-         if (newFormValues[prop] === null || newFormValues[prop] === "")
-            delete newFormValues[prop];
-      }
-      
-      try {
-         const { data } = await axios.patch(
-            `http://localhost:3000/api/post-categories/${category.id}`,
-            newFormValues
-         );
-         setIsSubmitting(false);
-         router.push("http://localhost:3000/dashboard/post-categories");
-         router.refresh();
-      } catch (error) {
-         setIsSubmitting(false);
-         console.log(error);
-      }
+      const url = createQueryString({
+         path: "http://localhost:3000/dashboard/post-categories",
+         queries: [
+            { name: "dialog", value: "open" },
+            { name: "dialogTitle", value: "successfull" },
+            { name: "dialogDescription", value: "category created successfully" },
+         ],
+      });
+      router.push(url);
+      router.refresh();
    };
 
    return (

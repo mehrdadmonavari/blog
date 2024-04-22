@@ -4,6 +4,7 @@ import React, { PropsWithChildren, useRef, useState } from "react";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import SideBar from "./SideBar";
 import Header from "./Header";
+import DialogMessage from "./DialogMesaage";
 
 const AdminPanelLayout = ({ children }: PropsWithChildren) => {
    const [isOpen, setIsOpen] = useState(true);
@@ -19,17 +20,19 @@ const AdminPanelLayout = ({ children }: PropsWithChildren) => {
 
    return (
       <main>
-         <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel className="hidden lg:block max-w-fit transition-all duration-300">
-               <SideBar ref={sidebarRef} type="resizable" onResize={onResize} />
-            </ResizablePanel>
-            <ResizablePanel className="transition-all duration-300">
-               <section className="min-h-screen flex flex-col px-6 bg-[#f5f5f9]">
-                  <Header isOpen={isOpen} onResize={onResize} />
-                  <section className="flex-1 flex">{children}</section>
-               </section>
-            </ResizablePanel>
-         </ResizablePanelGroup>
+         <DialogMessage>
+            <ResizablePanelGroup direction="horizontal">
+               <ResizablePanel className="hidden lg:block max-w-fit transition-all duration-300">
+                  <SideBar ref={sidebarRef} type="resizable" onResize={onResize} />
+               </ResizablePanel>
+               <ResizablePanel className="transition-all duration-300">
+                  <section className="min-h-screen flex flex-col px-6 bg-[#f5f5f9]">
+                     <Header isOpen={isOpen} onResize={onResize} />
+                     <section className="flex-1 flex">{children}</section>
+                  </section>
+               </ResizablePanel>
+            </ResizablePanelGroup>
+         </DialogMessage>
       </main>
    );
 };
