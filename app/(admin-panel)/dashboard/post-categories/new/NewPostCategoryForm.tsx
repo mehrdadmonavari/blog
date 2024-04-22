@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import "easymde/dist/easymde.min.css";
 import { Textarea } from "@/components/ui/textarea";
 import { SingleImageDropzone } from "@/components/ui/single-image-dropzone";
@@ -58,9 +58,27 @@ const createPostCategorySchema = z.object({
 type FormData = z.infer<typeof createPostCategorySchema>;
 
 const NewPostCategoryForm = () => {
-   const router = useRouter();
    const { edgestore } = useEdgeStore();
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const router = useRouter();
+   const searchParams = useSearchParams();
+
+   const createQueryString = useCallback(
+      ({
+         path,
+         queries,
+      }: {
+         path: string;
+         queries: { name: string; value: string }[];
+      }) => {
+         const params = new URLSearchParams(searchParams.toString());
+         queries.map((query) => {
+            params.set(query.name, query.value);
+         });
+         return path + "?" + params.toString();
+      },
+      [searchParams]
+   );
 
    const form = useForm<FormData>({
       resolver: zodResolver(createPostCategorySchema),
@@ -102,7 +120,16 @@ const NewPostCategoryForm = () => {
             newFormValues
          );
          setIsSubmitting(false);
-         router.push("http://localhost:3000/dashboard/post-categories");
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/post-categories",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "category edited successfully" },
+            ],
+         });
+         router.push(url);
          router.refresh();
       } catch (error) {
          setIsSubmitting(false);

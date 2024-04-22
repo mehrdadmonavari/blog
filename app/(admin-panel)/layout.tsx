@@ -4,7 +4,7 @@ import React, { PropsWithChildren, useRef, useState } from "react";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import SideBar from "./SideBar";
 import Header from "./Header";
-import DialogMessage from "./DialogMesaage";
+import DialogMessage from "../../components/ui/dialog-message";
 
 const AdminPanelLayout = ({ children }: PropsWithChildren) => {
    const [isOpen, setIsOpen] = useState(true);

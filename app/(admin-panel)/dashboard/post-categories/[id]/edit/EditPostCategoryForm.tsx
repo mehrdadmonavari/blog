@@ -71,7 +71,6 @@ interface Props {
 const EditPostCategoryForm = ({ category }: Props) => {
    const { edgestore } = useEdgeStore();
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const file = edgestore.publicFiles;
    const router = useRouter();
    const searchParams = useSearchParams();
    
@@ -92,15 +91,6 @@ const EditPostCategoryForm = ({ category }: Props) => {
       [searchParams]
    );
 
-   const deleteQueryString = useCallback(
-      (name: string, value: string) => {
-         const params = new URLSearchParams(searchParams.toString());
-         params.delete(name, value);
-         return params.toString();
-      },
-      [searchParams]
-   );
-
    const form = useForm<FormData>({
       resolver: zodResolver(editPostCategorySchema),
       defaultValues: {
@@ -111,71 +101,67 @@ const EditPostCategoryForm = ({ category }: Props) => {
       },
    });
 
-   // const onSubmit = async (values: FormData) => {
-   //    setIsSubmitting(true);
-
-   //    const newFormValues: {[index: string]: any} = {
-   //       name: values.name !== category.name ? values.name : null,
-   //       description:
-   //          values.description !== category.description ? values.description : null,
-   //       status: values.status !== category.status ? values.status : null,
-   //       imageUrl: "",
-   //    };
-
-   //    if (!values.image) {
-   //       console.log("image does not exist");
-   //       setIsSubmitting(false);
-   //       return;
-   //    }
-
-   //    if (typeof values.image !== "string") {
-   //       const file: File = values.image;
-
-   //       try {
-   //          const res = await edgestore.publicFiles.upload({
-   //             file,
-   //             options: {
-   //                replaceTargetUrl: category.imageUrl,
-   //             },
-   //          });
-   //          newFormValues.imageUrl = res.url;
-   //       } catch (error) {
-   //          console.log("error in upload image", error);
-   //          setIsSubmitting(false);
-   //          return;
-   //       }
-   //    }
-
-   //    for (const prop in newFormValues) {
-   //       if (newFormValues[prop] === null || newFormValues[prop] === "")
-   //          delete newFormValues[prop];
-   //    }
-
-   //    try {
-   //       const { data } = await axios.patch(
-   //          `http://localhost:3000/api/post-categories/${category.id}`,
-   //          newFormValues
-   //       );
-   //       setIsSubmitting(false);
-   //       router.push("http://localhost:3000/dashboard/post-categories");
-   //       router.refresh();
-   //    } catch (error) {
-   //       setIsSubmitting(false);
-   //       console.log(error);
-   //    }
-   // };
-
    const onSubmit = async (values: FormData) => {
-      const url = createQueryString({
-         path: "http://localhost:3000/dashboard/post-categories",
-         queries: [
-            { name: "dialog", value: "open" },
-            { name: "dialogTitle", value: "successfull" },
-            { name: "dialogDescription", value: "category created successfully" },
-         ],
-      });
-      router.push(url);
-      router.refresh();
+      setIsSubmitting(true);
+
+      const newFormValues: {[index: string]: any} = {
+         name: values.name !== category.name ? values.name : null,
+         description:
+            values.description !== category.description ? values.description : null,
+         status: values.status !== category.status ? values.status : null,
+         imageUrl: "",
+      };
+
+      if (!values.image) {
+         console.log("image does not exist");
+         setIsSubmitting(false);
+         return;
+      }
+
+      if (typeof values.image !== "string") {
+         const file: File = values.image;
+
+         try {
+            const res = await edgestore.publicFiles.upload({
+               file,
+               options: {
+                  replaceTargetUrl: category.imageUrl,
+               },
+            });
+            newFormValues.imageUrl = res.url;
+         } catch (error) {
+            console.log("error in upload image", error);
+            setIsSubmitting(false);
+            return;
+         }
+      }
+
+      for (const prop in newFormValues) {
+         if (newFormValues[prop] === null || newFormValues[prop] === "")
+            delete newFormValues[prop];
+      }
+
+      try {
+         const { data } = await axios.patch(
+            `http://localhost:3000/api/post-categories/${category.id}`,
+            newFormValues
+         );
+         setIsSubmitting(false);
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/post-categories",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "category edited successfully" },
+            ],
+         });
+         router.push(url);
+         router.refresh();
+      } catch (error) {
+         setIsSubmitting(false);
+         console.log(error);
+      }
    };
 
    return (
