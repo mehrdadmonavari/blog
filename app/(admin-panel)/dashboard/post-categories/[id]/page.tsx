@@ -55,10 +55,10 @@ const PostCategoryDetailPage = async ({ params: { id } }: Props) => {
          <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-6 my-3 max-h-[calc(100vh-11.5rem)]">
             <div className="flex flex-col sm:flex-row sm:justify-between gap-y-4 mb-6">
                <span className="text-xl sm:text-2xl text-slate-700 font-semibold">
-                  Categoriers Reports
+                  Categoriers Report
                </span>
                <Link href={`/dashboard/post-categories/${category.id}/edit`}>
-                  <Button className="w-full">Update categore</Button>
+                  <Button className="w-full">Edit Categore</Button>
                </Link>
             </div>
 

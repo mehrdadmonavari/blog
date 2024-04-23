@@ -11,10 +11,10 @@ import { DataTable } from "@/components/ui/data-table";
 import prisma from "@/prisma/client";
 import Link from "next/link";
 import React from "react";
-import { columns } from "./columns";
+// import { columns } from "./columns";
 
-const PostCategoriesPage = async () => {
-   const postCategories = await prisma.postCategory.findMany();
+const PostsPage = async () => {
+   const posts = await prisma.post.findMany();
 
    return (
       <div className="flex-1 flex flex-col">
@@ -28,7 +28,7 @@ const PostCategoriesPage = async () => {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                     <BreadcrumbPage>Categories</BreadcrumbPage>
+                     <BreadcrumbPage>Posts</BreadcrumbPage>
                   </BreadcrumbItem>
                </BreadcrumbList>
             </Breadcrumb>
@@ -36,13 +36,13 @@ const PostCategoriesPage = async () => {
          <div className="flex-1 bg-white rounded-lg shadow-lg p-6 my-3">
             <div className="flex flex-col sm:flex-row sm:justify-between gap-y-4 mb-6">
                <span className="text-xl sm:text-2xl text-slate-700 font-semibold">
-                  Categoriers Report
+                  Posts Report
                </span>
                <Link href="/dashboard/post-categories/new">
-                  <Button className="w-full">New Category</Button>
+                  <Button className="w-full">New Post</Button>
                </Link>
             </div>
-            <DataTable columns={columns} data={postCategories} />
+            {/* <DataTable columns={columns} data={postCategories} /> */}
          </div>
       </div>
    );
@@ -50,4 +50,4 @@ const PostCategoriesPage = async () => {
 
 export const dynamic = "force-dynamic";
 
-export default PostCategoriesPage;
+export default PostsPage;

@@ -6,6 +6,7 @@ import {
    Gauge,
    Home,
    LayoutGrid,
+   Newspaper,
    UserRoundCog,
 } from "lucide-react";
 import Link from "next/link";
@@ -34,10 +35,19 @@ const sidebarLinks = [
             collapsible: true,
             header: "Categories",
             subItems: [
-               { label: "Reports", href: "/dashboard/post-categories" },
+               { label: "Report", href: "/dashboard/post-categories" },
                { label: "New Category", href: "/dashboard/post-categories/new" },
             ],
             icon: <LayoutGrid className="w-5" />,
+         },
+         {
+            collapsible: true,
+            header: "Posts",
+            subItems: [
+               { label: "Report", href: "/dashboard/posts" },
+               { label: "New Post", href: "/dashboard/posts/new" },
+            ],
+            icon: <Newspaper className="w-5" />,
          },
       ],
    },
