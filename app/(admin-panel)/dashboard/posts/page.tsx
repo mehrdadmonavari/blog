@@ -11,7 +11,7 @@ import { DataTable } from "@/components/ui/data-table";
 import prisma from "@/prisma/client";
 import Link from "next/link";
 import React from "react";
-// import { columns } from "./columns";
+import { columns } from "./columns";
 
 const PostsPage = async () => {
    const posts = await prisma.post.findMany();
@@ -42,7 +42,7 @@ const PostsPage = async () => {
                   <Button className="w-full">New Post</Button>
                </Link>
             </div>
-            {/* <DataTable columns={columns} data={postCategories} /> */}
+            <DataTable columns={columns} data={posts} />
          </div>
       </div>
    );
