@@ -111,6 +111,6 @@ model Post {
 }
 
 enum Commentable {
-   UNCOMMENTABLE
    COMMENTABLE
+   UNCOMMENTABLE
 }
