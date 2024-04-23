@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Eye, MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import {
 import { useEdgeStore } from "@/lib/edgestore";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
+import Spinner from "@/components/ui/spinner";
 
 interface Props {
    id: number;
@@ -32,7 +33,9 @@ const PostCategoryActionsButton = ({ id }: Props) => {
    const { edgestore } = useEdgeStore();
    const router = useRouter();
    const searchParams = useSearchParams();
-      
+   const [isDeleting, setIsDeleting] = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
+
    const createQueryString = useCallback(
       ({
          path,
@@ -51,6 +54,7 @@ const PostCategoryActionsButton = ({ id }: Props) => {
    );
 
    const handleDelete = async (id: number) => {
+      setIsDeleting(true);
       try {
          const { data } = await axios.get(
             `http://localhost:3000/api/post-categories/${id}`
@@ -66,15 +70,19 @@ const PostCategoryActionsButton = ({ id }: Props) => {
                { name: "dialogDescription", value: "category deleted successfully" },
             ],
          });
+         setIsDeleting(false);
+         setIsOpen(false);
          router.push(url);
          router.refresh();
       } catch (error) {
+         setIsDeleting(false);
+         setIsOpen(false);
          console.log(error);
       }
    };
 
    return (
-      <AlertDialog>
+      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
          <DropdownMenu>
             <DropdownMenuTrigger asChild>
                <Button
@@ -114,10 +122,19 @@ const PostCategoryActionsButton = ({ id }: Props) => {
                </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-               <AlertDialogCancel>Cancel</AlertDialogCancel>
-               <AlertDialogAction onClick={() => handleDelete(id)}>
+               <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+               <Button
+                  disabled={isDeleting}
+                  className={`${isDeleting && "min-w-[84px] flex justify-center"}`}
+                  variant="destructive"
+                  onClick={() => handleDelete(id)}>
+                  {isDeleting ? <Spinner variant="destructive" /> : "Submit"}
+               </Button>
+               {/* <AlertDialogAction disabled={isDeleting} onClick={() => handleDelete(id)}>
+                  {isDeleting ? <Spinner /> : "Submit"}
+                  <Spinner />
                   Continue
-               </AlertDialogAction>
+               </AlertDialogAction> */}
             </AlertDialogFooter>
          </AlertDialogContent>
       </AlertDialog>

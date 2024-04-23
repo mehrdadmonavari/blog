@@ -1,11 +1,19 @@
 import React from "react";
 
-const Spinner = () => {
+interface Props {
+   variant?: string
+}
+
+const Spinner = ({variant = "primary"}: Props) => {
+   // if(!variant) {
+   //    variant = "primary"
+   // }
+
    return (
       <div role="status">
          <svg
             aria-hidden="true"
-            className="w-6 h-6 text-slate-100 animate-spin dark:text-gray-600 fill-indigo-500"
+            className={`w-6 h-6 text-slate-100 animate-spin dark:text-gray-600 ${variant === "primary" && "fill-indigo-500"} ${variant === "destructive" && "fill-red-500"}`}
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
