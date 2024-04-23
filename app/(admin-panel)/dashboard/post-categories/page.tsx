@@ -39,7 +39,7 @@ const PostCategoriesPage = async () => {
                   Categoriers Reports
                </span>
                <Link href="/dashboard/post-categories/new">
-                  <Button className="w-full">New categore</Button>
+                  <Button className="w-full">New category</Button>
                </Link>
             </div>
             <DataTable columns={columns} data={postCategories} />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -241,8 +241,6 @@ const EditPostCategoryForm = ({ category }: Props) => {
                         <FormControl>
                            <SingleImageDropzone
                               className="min-h-[200px]"
-                              // default={category.imageUrl}
-                              // value={category.imageUrl}
                               error={fieldState.invalid ? fieldState.error?.message : ""}
                               {...field}
                            />

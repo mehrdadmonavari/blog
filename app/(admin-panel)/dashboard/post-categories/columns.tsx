@@ -1,25 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "./StatusBadge";
-import { Status } from "@prisma/client";
 import PostCategoryActionsButton from "./PostCategoryActionsButton";
-import {
-   AlertDialog,
-   AlertDialogAction,
-   AlertDialogCancel,
-   AlertDialogContent,
-   AlertDialogDescription,
-   AlertDialogFooter,
-   AlertDialogHeader,
-   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-
-export type Category = {
-   id: number;
-   name: string;
-   status: Status;
-   createdAt: Date;
-};
 
 export const columns: ColumnDef<Category>[] = [
    {

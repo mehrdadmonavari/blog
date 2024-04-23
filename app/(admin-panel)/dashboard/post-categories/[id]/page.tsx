@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
 import StatusBadge from "../StatusBadge";
-import Image from "next/image";
 import ImageBox from "@/components/ui/ImageBox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
