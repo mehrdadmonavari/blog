@@ -1,6 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "./StatusBadge";
+import CommentableBadge from "./CommentableBadge";
 // import PostCategoryActionsButton from "./PostCategoryActionsButton";
 
 export const columns: ColumnDef<Post>[] = [
@@ -22,7 +23,7 @@ export const columns: ColumnDef<Post>[] = [
       accessorKey: "commentable",
       header: "Commentable",
       cell: ({ row }) => {
-         return <StatusBadge status={row.getValue("status")} />;
+         return <CommentableBadge commentable={row.getValue("commentable")} />;
       },
    },
    {

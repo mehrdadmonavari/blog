@@ -3,8 +3,8 @@ import { Commentable } from "@prisma/client";
 import React from "react";
 
 const commentableMap: Record<Commentable, { label: string; variant: "default" | "destructive" }> = {
-   COMMENTABLE: { label: "enable", variant: "default" },
-   UNCOMMENTABLE: { label: "disable", variant: "destructive" },
+   COMMENTABLE: { label: "commentable", variant: "default" },
+   UNCOMMENTABLE: { label: "uncommentable", variant: "destructive" },
 };
 
 interface Props {

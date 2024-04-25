@@ -129,12 +129,12 @@ const NewPostForm = () => {
          );
          setIsSubmitting(false);
          const url = createQueryString({
-            path: "http://localhost:3000/dashboard/post-categories",
+            path: "http://localhost:3000/dashboard/posts",
             queries: [
                { name: "dialog", value: "open" },
                { name: "dialogType", value: "SUCCESS" },
                { name: "dialogTitle", value: "successfull" },
-               { name: "dialogDescription", value: "category created successfully" },
+               { name: "dialogDescription", value: "post created successfully" },
             ],
          });
          router.push(url);
