@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Eye, MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ interface Props {
    id: number;
 }
 
-const PostCategoryActionsButton = ({ id }: Props) => {
+const PostActionsButton = ({ id }: Props) => {
    const { edgestore } = useEdgeStore();
    const router = useRouter();
    const searchParams = useSearchParams();
@@ -54,31 +54,31 @@ const PostCategoryActionsButton = ({ id }: Props) => {
    );
 
    const handleDelete = async (id: number) => {
-      setIsDeleting(true);
-      try {
-         const { data } = await axios.get(
-            `http://localhost:3000/api/post-categories/${id}`
-         );
-         await edgestore.publicFiles.delete({ url: data.imageUrl });
-         await axios.delete(`http://localhost:3000/api/post-categories/${id}`);
-         const url = createQueryString({
-            path: "http://localhost:3000/dashboard/post-categories",
-            queries: [
-               { name: "dialog", value: "open" },
-               { name: "dialogType", value: "SUCCESS" },
-               { name: "dialogTitle", value: "successfull" },
-               { name: "dialogDescription", value: "category deleted successfully" },
-            ],
-         });
-         setIsDeleting(false);
-         setIsOpen(false);
-         router.push(url);
-         router.refresh();
-      } catch (error) {
-         setIsDeleting(false);
-         setIsOpen(false);
-         console.log(error);
-      }
+      // setIsDeleting(true);
+      // try {
+      //    const { data } = await axios.get(
+      //       `http://localhost:3000/api/post-categories/${id}`
+      //    );
+      //    await edgestore.publicFiles.delete({ url: data.imageUrl });
+      //    await axios.delete(`http://localhost:3000/api/post-categories/${id}`);
+      //    const url = createQueryString({
+      //       path: "http://localhost:3000/dashboard/post-categories",
+      //       queries: [
+      //          { name: "dialog", value: "open" },
+      //          { name: "dialogType", value: "SUCCESS" },
+      //          { name: "dialogTitle", value: "successfull" },
+      //          { name: "dialogDescription", value: "category deleted successfully" },
+      //       ],
+      //    });
+      //    setIsDeleting(false);
+      //    setIsOpen(false);
+      //    router.push(url);
+      //    router.refresh();
+      // } catch (error) {
+      //    setIsDeleting(false);
+      //    setIsOpen(false);
+      //    console.log(error);
+      // }
    };
 
    return (
@@ -93,13 +93,13 @@ const PostCategoryActionsButton = ({ id }: Props) => {
                </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-               <Link href={`/dashboard/post-categories/${id}`}>
+               <Link href={`/dashboard/posts/${id}`}>
                   <DropdownMenuItem className="text-slate-700 font-medium cursor-pointer">
                      <Eye className="w-5 mr-1.5" />
                      View Detail
                   </DropdownMenuItem>
                </Link>
-               <Link href={`/dashboard/post-categories/${id}/edit`}>
+               <Link href={`/dashboard/posts/${id}/edit`}>
                   <DropdownMenuItem className="text-slate-700 font-medium cursor-pointer transition duration-300 hover:!bg-blue-100 hover:!text-blue-500">
                      <SquarePen className="w-5 mr-1.5" />
                      edit Category
@@ -136,4 +136,4 @@ const PostCategoryActionsButton = ({ id }: Props) => {
    );
 };
 
-export default PostCategoryActionsButton;
+export default PostActionsButton;
