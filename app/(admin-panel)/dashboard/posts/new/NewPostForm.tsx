@@ -36,7 +36,10 @@ const ACCEPTED_IMAGE_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const ACCEPTED_IMAGE_TYPES = ["jpeg", "jpg", "png"];
 
 const createPostSchema = z.object({
-   title: z.string({ invalid_type_error: "Title field is required" }).min(1).max(255),
+   title: z
+      .string({ invalid_type_error: "Title field is required" })
+      .min(1, { message: "Title must contain at least 1 character(s)" })
+      .max(255),
    summary: z
       .string({ invalid_type_error: "Summary field is required" })
       .min(10, "Summary must contain at least 10 character(s)"),
@@ -96,48 +99,50 @@ const NewPostForm = () => {
    });
 
    const onSubmit = async (values: FormData) => {
-      // setIsSubmitting(true);
-      // const newFormValues = {
-      //    name: values.name,
-      //    description: values.description,
-      //    status: values.status,
-      //    imageUrl: "",
-      // };
-      // if (!values.image) {
-      //    console.log("image does not exist");
-      //    setIsSubmitting(false);
-      //    return;
-      // }
-      // const file: File = values.image;
-      // try {
-      //    const res = await edgestore.publicFiles.upload({ file });
-      //    newFormValues.imageUrl = res.url;
-      // } catch (error) {
-      //    console.log("error in upload image", error);
-      //    setIsSubmitting(false);
-      //    return;
-      // }
-      // try {
-      //    const { data } = await axios.post(
-      //       "http://localhost:3000/api/post-categories",
-      //       newFormValues
-      //    );
-      //    setIsSubmitting(false);
-      //    const url = createQueryString({
-      //       path: "http://localhost:3000/dashboard/post-categories",
-      //       queries: [
-      //          { name: "dialog", value: "open" },
-      //          { name: "dialogType", value: "SUCCESS" },
-      //          { name: "dialogTitle", value: "successfull" },
-      //          { name: "dialogDescription", value: "category created successfully" },
-      //       ],
-      //    });
-      //    router.push(url);
-      //    router.refresh();
-      // } catch (error) {
-      //    setIsSubmitting(false);
-      //    console.log(error);
-      // }
+      setIsSubmitting(true);
+      const newFormValues = {
+         title: values.title,
+         summary: values.summary,
+         body: values.body,
+         status: values.status,
+         commentable: values.commentable,
+         imageUrl: "",
+      };
+      if (!values.image) {
+         console.log("image does not exist");
+         setIsSubmitting(false);
+         return;
+      }
+      const file: File = values.image;
+      try {
+         const res = await edgestore.publicFiles.upload({ file });
+         newFormValues.imageUrl = res.url;
+      } catch (error) {
+         console.log("error in upload image", error);
+         setIsSubmitting(false);
+         return;
+      }
+      try {
+         const { data } = await axios.post(
+            "http://localhost:3000/api/posts",
+            newFormValues
+         );
+         setIsSubmitting(false);
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/post-categories",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "category created successfully" },
+            ],
+         });
+         router.push(url);
+         router.refresh();
+      } catch (error) {
+         setIsSubmitting(false);
+         console.log(error);
+      }
    };
 
    return (
@@ -250,6 +255,22 @@ const NewPostForm = () => {
                            />
                         </FormControl>
                         <FormMessage />
+                     </FormItem>
+                  )}
+               />
+               <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field, fieldState }) => (
+                     <FormItem className="md:flex-1 h-[255px]">
+                        <FormLabel className="text-slate-500">Image</FormLabel>
+                        <FormControl>
+                           <SingleImageDropzone
+                              className="min-h-[200px]"
+                              error={fieldState.invalid ? fieldState.error?.message : ""}
+                              {...field}
+                           />
+                        </FormControl>
                      </FormItem>
                   )}
                />

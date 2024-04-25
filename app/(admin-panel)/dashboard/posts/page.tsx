@@ -38,7 +38,7 @@ const PostsPage = async () => {
                <span className="text-xl sm:text-2xl text-slate-700 font-semibold">
                   Posts Report
                </span>
-               <Link href="/dashboard/post-categories/new">
+               <Link href="/dashboard/posts/new">
                   <Button className="w-full">New Post</Button>
                </Link>
             </div>

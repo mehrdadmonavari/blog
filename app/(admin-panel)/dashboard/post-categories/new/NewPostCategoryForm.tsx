@@ -36,7 +36,7 @@ const ACCEPTED_IMAGE_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const ACCEPTED_IMAGE_TYPES = ["jpeg", "jpg", "png"];
 
 const createPostCategorySchema = z.object({
-   name: z.string({ invalid_type_error: "Name field is required" }).min(1).max(255),
+   name: z.string({ invalid_type_error: "Name field is required" }).min(1, {message: "Name must contain at least 1 character(s)"}).max(255),
    description: z
       .string({ invalid_type_error: "Description field is required" })
       .min(10, "Description must contain at least 10 character(s)"),
