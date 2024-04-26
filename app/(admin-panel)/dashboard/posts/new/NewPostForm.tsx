@@ -19,6 +19,13 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select";
+import {
+   Command,
+   CommandEmpty,
+   CommandGroup,
+   CommandInput,
+   CommandItem,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -28,6 +35,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { SingleImageDropzone } from "@/components/ui/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import Spinner from "@/components/ui/spinner";
+import Combobox from "@/components/ui/combobox";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
 
@@ -48,6 +58,11 @@ const createPostSchema = z.object({
       .min(20, "Body must contain at least 20 character(s)"),
    status: z.enum(["ENABLE", "DISABLE"]),
    commentable: z.enum(["COMMENTABLE", "UNCOMMENTABLE"]),
+   categoryId: z
+      .string()
+      .trim()
+      .min(1, "Category Field is required. please select a category"),
+   // categoryId: z.string().min(0, "Category Field is required. please select a category"),
    image: z
       .any()
       .refine((files) => {
@@ -64,11 +79,25 @@ const createPostSchema = z.object({
 
 type FormData = z.infer<typeof createPostSchema>;
 
-const NewPostForm = () => {
+interface Props {
+   categories: Category[];
+}
+
+const NewPostForm = ({ categories }: Props) => {
    const { edgestore } = useEdgeStore();
    const [isSubmitting, setIsSubmitting] = useState(false);
    const router = useRouter();
    const searchParams = useSearchParams();
+   const [openCategory, setOpenCategory] = useState(false);
+   const [categoryValue, setCategoryValue] = React.useState("");
+
+   const comboboxData = categories.map((category) => {
+      return {
+         id: category.id,
+         value: category.name.toLowerCase(),
+         label: category.name.toLowerCase(),
+      };
+   });
 
    const createQueryString = useCallback(
       ({
@@ -95,54 +124,57 @@ const NewPostForm = () => {
          body: "",
          status: "ENABLE",
          commentable: "COMMENTABLE",
+         categoryId: "",
       },
    });
 
    const onSubmit = async (values: FormData) => {
-      setIsSubmitting(true);
-      const newFormValues = {
-         title: values.title,
-         summary: values.summary,
-         body: values.body,
-         status: values.status,
-         commentable: values.commentable,
-         imageUrl: "",
-      };
-      if (!values.image) {
-         console.log("image does not exist");
-         setIsSubmitting(false);
-         return;
-      }
-      const file: File = values.image;
-      try {
-         const res = await edgestore.publicFiles.upload({ file });
-         newFormValues.imageUrl = res.url;
-      } catch (error) {
-         console.log("error in upload image", error);
-         setIsSubmitting(false);
-         return;
-      }
-      try {
-         const { data } = await axios.post(
-            "http://localhost:3000/api/posts",
-            newFormValues
-         );
-         setIsSubmitting(false);
-         const url = createQueryString({
-            path: "http://localhost:3000/dashboard/posts",
-            queries: [
-               { name: "dialog", value: "open" },
-               { name: "dialogType", value: "SUCCESS" },
-               { name: "dialogTitle", value: "successfull" },
-               { name: "dialogDescription", value: "post created successfully" },
-            ],
-         });
-         router.push(url);
-         router.refresh();
-      } catch (error) {
-         setIsSubmitting(false);
-         console.log(error);
-      }
+      // setIsSubmitting(true);
+      console.log(values);
+
+      // const newFormValues = {
+      //    title: values.title,
+      //    summary: values.summary,
+      //    body: values.body,
+      //    status: values.status,
+      //    commentable: values.commentable,
+      //    imageUrl: "",
+      // };
+      // if (!values.image) {
+      //    console.log("image does not exist");
+      //    setIsSubmitting(false);
+      //    return;
+      // }
+      // const file: File = values.image;
+      // try {
+      //    const res = await edgestore.publicFiles.upload({ file });
+      //    newFormValues.imageUrl = res.url;
+      // } catch (error) {
+      //    console.log("error in upload image", error);
+      //    setIsSubmitting(false);
+      //    return;
+      // }
+      // try {
+      //    const { data } = await axios.post(
+      //       "http://localhost:3000/api/posts",
+      //       newFormValues
+      //    );
+      //    setIsSubmitting(false);
+      //    const url = createQueryString({
+      //       path: "http://localhost:3000/dashboard/posts",
+      //       queries: [
+      //          { name: "dialog", value: "open" },
+      //          { name: "dialogType", value: "SUCCESS" },
+      //          { name: "dialogTitle", value: "successfull" },
+      //          { name: "dialogDescription", value: "post created successfully" },
+      //       ],
+      //    });
+      //    router.push(url);
+      //    router.refresh();
+      // } catch (error) {
+      //    setIsSubmitting(false);
+      //    console.log(error);
+      // }
    };
 
    return (
@@ -170,27 +202,6 @@ const NewPostForm = () => {
                />
                <FormField
                   control={form.control}
-                  name="summary"
-                  render={({ field, fieldState }) => (
-                     <FormItem className="md:flex-1 h-[100px]">
-                        <FormLabel className="text-slate-500">Summary</FormLabel>
-                        <FormControl>
-                           <Input
-                              className={`text-slate-700 ${
-                                 fieldState?.invalid && "border-red-500"
-                              } transition duration-300 focus-visible:border-indigo-500 focus-visible:shadow-sm placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-2.5`}
-                              placeholder="Summary for sport"
-                              {...field}
-                           />
-                        </FormControl>
-                        <FormMessage />
-                     </FormItem>
-                  )}
-               />
-            </div>
-            <div className="flex flex-col md:flex-row justify-center md:justify-start gap-x-10 gap-y-4 md:gap-y-0">
-               <FormField
-                  control={form.control}
                   name="status"
                   render={({ field, fieldState }) => (
                      <FormItem className="md:flex-1 h-[100px]">
@@ -209,6 +220,27 @@ const NewPostForm = () => {
                               <SelectItem value="DISABLE">disable</SelectItem>
                            </SelectContent>
                         </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
+            <div className="flex flex-col md:flex-row justify-center md:justify-start gap-x-10 gap-y-4 md:gap-y-0">
+               <FormField
+                  control={form.control}
+                  name="summary"
+                  render={({ field, fieldState }) => (
+                     <FormItem className="md:flex-1 h-[100px]">
+                        <FormLabel className="text-slate-500">Summary</FormLabel>
+                        <FormControl>
+                           <Input
+                              className={`text-slate-700 ${
+                                 fieldState?.invalid && "border-red-500"
+                              } transition duration-300 focus-visible:border-indigo-500 focus-visible:shadow-sm placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-2.5`}
+                              placeholder="Summary for sport"
+                              {...field}
+                           />
+                        </FormControl>
                         <FormMessage />
                      </FormItem>
                   )}
@@ -258,6 +290,56 @@ const NewPostForm = () => {
                      </FormItem>
                   )}
                />
+               <FormField
+                  control={form.control}
+                  name="categoryId"
+                  render={({ field, fieldState }) => (
+                     <FormItem className="md:flex-1 h-[100px]">
+                        <FormLabel className="text-slate-500">Category</FormLabel>
+                        <Select onValueChange={field.onChange}>
+                           <FormControl>
+                              <SelectTrigger
+                                 className={`text-slate-700 ${
+                                    fieldState?.invalid && "border-red-500"
+                                 } transition duration-300 focus-visible:outline-none aria-[expanded=true]:border-indigo-500 focus:border-indigo-500 focus:shadow-sm`}>
+                                 <SelectValue />
+                                 {field.value === "" && (
+                                    <span className="flex-1 text-left text-slate-400 font-medium transition-all duration-300 translate-x-2.5">
+                                       No category selected
+                                    </span>
+                                 )}
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              <Command>
+                                 <CommandInput placeholder="Search category..." />
+                                 <CommandEmpty>No Category found.</CommandEmpty>
+                                 <CommandGroup>
+                                    {comboboxData.map((item) => (
+                                       <CommandItem
+                                       className="px-0 py-0 aria-selected:bg-inherit aria-selected:text-inherit"
+                                          key={item.id}
+                                          value={item.id.toString()}>
+                                          <SelectItem value={item.id.toString()}>
+                                             {item.label}
+                                          </SelectItem>
+                                       </CommandItem>
+                                    ))}
+                                 </CommandGroup>
+                              </Command>
+                           </SelectContent>
+
+                           {/* <SelectContent>
+                              <SelectItem value="COMMENTABLE">commentable</SelectItem>
+                              <SelectItem value="UNCOMMENTABLE">uncommentable</SelectItem>
+                           </SelectContent> */}
+                        </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
+            <div className="flex flex-col md:flex-row justify-center md:justify-start gap-x-10 gap-y-4 md:gap-y-0">
                <FormField
                   control={form.control}
                   name="image"

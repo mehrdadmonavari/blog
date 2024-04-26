@@ -2,6 +2,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "./StatusBadge";
 import CommentableBadge from "./CommentableBadge";
+import PostCategoryActionsButton from "../post-categories/PostCategoryActionsButton";
+import PostActionsButton from "./PostActionsButton";
 // import PostCategoryActionsButton from "./PostCategoryActionsButton";
 
 export const columns: ColumnDef<Post>[] = [
@@ -9,7 +11,7 @@ export const columns: ColumnDef<Post>[] = [
       accessorKey: "title",
       header: "Title",
       cell: ({ row }) => {
-         return <div className="min-w-36">{row.getValue("title")}</div>;
+         return <div className="min-w-24">{row.getValue("title")}</div>;
       },
    },
    {
@@ -43,17 +45,17 @@ export const columns: ColumnDef<Post>[] = [
          );
       },
    },
-   // {
-   //    id: "actions",
-   //    header: () => <div className="text-right">Actions</div>,
-   //    cell: ({ row }) => {
-   //       const category = row.original;
+   {
+      id: "actions",
+      header: () => <div className="text-right">Actions</div>,
+      cell: ({ row }) => {
+         const post = row.original;
 
-   //       return (
-   //          <div className="flex justify-end text-right w-full pr-3">
-   //             <PostCategoryActionsButton id={category.id} />
-   //          </div>
-   //       );
-   //    },
-   // },
+         return (
+            <div className="flex justify-end text-right w-full pr-3">
+               <PostActionsButton id={post.id} />
+            </div>
+         );
+      },
+   },
 ];
