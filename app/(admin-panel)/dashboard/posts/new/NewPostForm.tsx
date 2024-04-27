@@ -35,9 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SingleImageDropzone } from "@/components/ui/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import Spinner from "@/components/ui/spinner";
-import Combobox from "@/components/ui/combobox";
-import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import DatePicker from "@/components/ui/datePicker";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1;
 
@@ -61,8 +59,7 @@ const createPostSchema = z.object({
    categoryId: z
       .string()
       .trim()
-      .min(1, "Category Field is required. please select a category"),
-   // categoryId: z.string().min(0, "Category Field is required. please select a category"),
+      .min(1, "Category field is required. please select a category"),
    image: z
       .any()
       .refine((files) => {
@@ -75,6 +72,7 @@ const createPostSchema = z.object({
       .refine((files) => {
          return files?.size <= MAX_FILE_SIZE;
       }, `Max image size is 1MB.`),
+   publishedAt: z.date({ message: "published at field is required" }),
 });
 
 type FormData = z.infer<typeof createPostSchema>;
@@ -88,8 +86,6 @@ const NewPostForm = ({ categories }: Props) => {
    const [isSubmitting, setIsSubmitting] = useState(false);
    const router = useRouter();
    const searchParams = useSearchParams();
-   const [openCategory, setOpenCategory] = useState(false);
-   const [categoryValue, setCategoryValue] = React.useState("");
 
    const comboboxData = categories.map((category) => {
       return {
@@ -137,10 +133,11 @@ const NewPostForm = ({ categories }: Props) => {
          body: values.body,
          status: values.status,
          commentable: values.commentable,
-         categoryId: parseInt(values.categoryId),
          imageUrl: "",
+         publishedAt: values.publishedAt,
+         categoryId: parseInt(values.categoryId),
       };
-      
+
       if (!values.image) {
          console.log("image does not exist");
          setIsSubmitting(false);
@@ -274,17 +271,15 @@ const NewPostForm = ({ categories }: Props) => {
             <div className="flex flex-col md:flex-row justify-center md:justify-start gap-x-10 gap-y-4 md:gap-y-0">
                <FormField
                   control={form.control}
-                  name="body"
+                  name="publishedAt"
                   render={({ field, fieldState }) => (
-                     <FormItem className="md:flex-1 h-[255px]">
-                        <FormLabel className="text-slate-500">Body</FormLabel>
+                     <FormItem className="md:flex-1 h-[100px]">
+                        <FormLabel className="text-slate-500">published at</FormLabel>
                         <FormControl>
-                           <Textarea
-                              placeholder="Some description"
-                              className={`resize-none text-slate-700 ${
-                                 fieldState?.invalid && "border-red-500"
-                              } transition duration-300 min-h-[200px] focus-visible:border-indigo-500 focus-visible:shadow-sm placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-2.5`}
-                              {...field}
+                           <DatePicker
+                              date={field.value}
+                              setDate={field.onChange}
+                              invalid={fieldState.invalid}
                            />
                         </FormControl>
                         <FormMessage />
@@ -329,11 +324,6 @@ const NewPostForm = ({ categories }: Props) => {
                                  </CommandGroup>
                               </Command>
                            </SelectContent>
-
-                           {/* <SelectContent>
-                              <SelectItem value="COMMENTABLE">commentable</SelectItem>
-                              <SelectItem value="UNCOMMENTABLE">uncommentable</SelectItem>
-                           </SelectContent> */}
                         </Select>
                         <FormMessage />
                      </FormItem>
@@ -341,6 +331,25 @@ const NewPostForm = ({ categories }: Props) => {
                />
             </div>
             <div className="flex flex-col md:flex-row justify-center md:justify-start gap-x-10 gap-y-4 md:gap-y-0">
+               <FormField
+                  control={form.control}
+                  name="body"
+                  render={({ field, fieldState }) => (
+                     <FormItem className="md:flex-1 h-[255px]">
+                        <FormLabel className="text-slate-500">Body</FormLabel>
+                        <FormControl>
+                           <Textarea
+                              placeholder="Some description"
+                              className={`resize-none text-slate-700 ${
+                                 fieldState?.invalid && "border-red-500"
+                              } transition duration-300 min-h-[200px] focus-visible:border-indigo-500 focus-visible:shadow-sm placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-2.5`}
+                              {...field}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
                <FormField
                   control={form.control}
                   name="image"
