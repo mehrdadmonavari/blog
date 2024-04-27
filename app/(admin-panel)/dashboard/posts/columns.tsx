@@ -2,9 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "./StatusBadge";
 import CommentableBadge from "./CommentableBadge";
-import PostCategoryActionsButton from "../post-categories/PostCategoryActionsButton";
 import PostActionsButton from "./PostActionsButton";
-// import PostCategoryActionsButton from "./PostCategoryActionsButton";
 
 export const columns: ColumnDef<Post>[] = [
    {

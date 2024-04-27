@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 import {
    AlertDialog,
-   AlertDialogAction,
    AlertDialogCancel,
    AlertDialogContent,
    AlertDialogDescription,
@@ -54,31 +53,29 @@ const PostActionsButton = ({ id }: Props) => {
    );
 
    const handleDelete = async (id: number) => {
-      // setIsDeleting(true);
-      // try {
-      //    const { data } = await axios.get(
-      //       `http://localhost:3000/api/post-categories/${id}`
-      //    );
-      //    await edgestore.publicFiles.delete({ url: data.imageUrl });
-      //    await axios.delete(`http://localhost:3000/api/post-categories/${id}`);
-      //    const url = createQueryString({
-      //       path: "http://localhost:3000/dashboard/post-categories",
-      //       queries: [
-      //          { name: "dialog", value: "open" },
-      //          { name: "dialogType", value: "SUCCESS" },
-      //          { name: "dialogTitle", value: "successfull" },
-      //          { name: "dialogDescription", value: "category deleted successfully" },
-      //       ],
-      //    });
-      //    setIsDeleting(false);
-      //    setIsOpen(false);
-      //    router.push(url);
-      //    router.refresh();
-      // } catch (error) {
-      //    setIsDeleting(false);
-      //    setIsOpen(false);
-      //    console.log(error);
-      // }
+      setIsDeleting(true);
+      try {
+         const { data } = await axios.get(`http://localhost:3000/api/posts/${id}`);
+         await edgestore.publicFiles.delete({ url: data.imageUrl });
+         await axios.delete(`http://localhost:3000/api/posts/${id}`);
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/posts",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "post deleted successfully" },
+            ],
+         });
+         setIsDeleting(false);
+         setIsOpen(false);
+         router.push(url);
+         router.refresh();
+      } catch (error) {
+         setIsDeleting(false);
+         setIsOpen(false);
+         console.log(error);
+      }
    };
 
    return (
@@ -102,13 +99,13 @@ const PostActionsButton = ({ id }: Props) => {
                <Link href={`/dashboard/posts/${id}/edit`}>
                   <DropdownMenuItem className="text-slate-700 font-medium cursor-pointer transition duration-300 hover:!bg-blue-100 hover:!text-blue-500">
                      <SquarePen className="w-5 mr-1.5" />
-                     edit Category
+                     edit Post
                   </DropdownMenuItem>
                </Link>
                <DropdownMenuItem className="text-slate-700 font-medium cursor-pointer transition duration-300 hover:!bg-red-100 hover:!text-red-500">
                   <AlertDialogTrigger className="flex justify-center items-center">
                      <Trash2 className="w-5 mr-1.5" />
-                     Delete Category
+                     Delete Post
                   </AlertDialogTrigger>
                </DropdownMenuItem>
             </DropdownMenuContent>
@@ -117,8 +114,7 @@ const PostActionsButton = ({ id }: Props) => {
             <AlertDialogHeader>
                <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                <AlertDialogDescription>
-                  Are you sure you want to delete this category, this action cannot be
-                  undone
+                  Are you sure you want to delete this post, this action cannot be undone
                </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
