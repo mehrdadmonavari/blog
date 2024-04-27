@@ -17,7 +17,8 @@ const createPostSchema = z.object({
    status: z.enum(["ENABLE", "DISABLE"]),
    commentable: z.enum(["COMMENTABLE", "UNCOMMENTABLE"]),
    imageUrl: z.string(),
-   categoryId: z.number()
+   publishedAt: z.string().transform((str) => new Date(str)),
+   categoryId: z.number(),
 });
 
 interface PostData {
@@ -27,6 +28,7 @@ interface PostData {
    status: "ENABLE" | "DISABLE";
    commentable: "COMMENTABLE" | "UNCOMMENTABLE";
    imageUrl: string;
+   publishedAt: Date;
    userId: string;
    categoryId: number;
 }
@@ -46,7 +48,7 @@ export async function POST(req: NextRequest) {
    if (!validation.success) {
       return NextResponse.json(validation.error.format(), { status: 400 });
    }
-
+   
    const createdData: PostData = {
       title: body.title,
       summary: body.summary,
@@ -54,6 +56,7 @@ export async function POST(req: NextRequest) {
       status: body.status,
       commentable: body.commentable,
       imageUrl: body.imageUrl,
+      publishedAt: body.publishedAt,
       userId: user?.id!,
       categoryId: body.categoryId,
    };
