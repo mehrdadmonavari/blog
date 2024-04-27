@@ -9,9 +9,11 @@ import {
    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import NewPostForm from "./NewPostForm";
-// import NewPostCategoryForm from "./NewPostCategoryForm";
+import prisma from "@/prisma/client";
 
-const NewPostCategoryPage = () => {
+const NewPostCategoryPage = async () => {
+   const categories: Category[] = await prisma.postCategory.findMany();
+
    return (
       <div className="flex-1 flex flex-col">
          <div className="py-4 sm:py-6">
@@ -39,7 +41,7 @@ const NewPostCategoryPage = () => {
             <div className="text-2xl text-slate-700 font-semibold">
                New post registration
             </div>
-            <NewPostForm />
+            <NewPostForm categories={categories} />
          </div>
       </div>
    );

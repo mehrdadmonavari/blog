@@ -17,6 +17,7 @@ const createPostSchema = z.object({
    status: z.enum(["ENABLE", "DISABLE"]),
    commentable: z.enum(["COMMENTABLE", "UNCOMMENTABLE"]),
    imageUrl: z.string(),
+   categoryId: z.number()
 });
 
 interface PostData {
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
       commentable: body.commentable,
       imageUrl: body.imageUrl,
       userId: user?.id!,
-      categoryId: 16,
+      categoryId: body.categoryId,
    };
 
    const newPost = await prisma.post.create({

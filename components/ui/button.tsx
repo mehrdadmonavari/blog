@@ -23,6 +23,7 @@ const buttonVariants = cva(
         activeSidebarLink: "w-full flex justify-start items-center gap-x-2 px-4 py-2.5 bg-indigo-100 rounded-lg text-indigo-500 text-sm font-medium relative before:absolute before:w-2 before:h-full before:-right-5 before:bg-indigo-500 before:rounded-full",
         sidebarSubLink: "w-full flex justify-start items-center gap-x-2 pl-4 py-2.5 rounded-lg text-slate-500 text-sm transition-all duration-300 hover:bg-slate-100 hover:text-slate-700",
         activeSidebarSubLink: "w-full flex justify-start items-center gap-x-2 pl-4 py-2.5 bg-slate-100 rounded-lg text-slate-700 text-sm",
+        selectInput: "",
         none: ""
       },
       size: {

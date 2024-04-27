@@ -129,52 +129,53 @@ const NewPostForm = ({ categories }: Props) => {
    });
 
    const onSubmit = async (values: FormData) => {
-      // setIsSubmitting(true);
-      console.log(values);
+      setIsSubmitting(true);
 
-      // const newFormValues = {
-      //    title: values.title,
-      //    summary: values.summary,
-      //    body: values.body,
-      //    status: values.status,
-      //    commentable: values.commentable,
-      //    imageUrl: "",
-      // };
-      // if (!values.image) {
-      //    console.log("image does not exist");
-      //    setIsSubmitting(false);
-      //    return;
-      // }
-      // const file: File = values.image;
-      // try {
-      //    const res = await edgestore.publicFiles.upload({ file });
-      //    newFormValues.imageUrl = res.url;
-      // } catch (error) {
-      //    console.log("error in upload image", error);
-      //    setIsSubmitting(false);
-      //    return;
-      // }
-      // try {
-      //    const { data } = await axios.post(
-      //       "http://localhost:3000/api/posts",
-      //       newFormValues
-      //    );
-      //    setIsSubmitting(false);
-      //    const url = createQueryString({
-      //       path: "http://localhost:3000/dashboard/posts",
-      //       queries: [
-      //          { name: "dialog", value: "open" },
-      //          { name: "dialogType", value: "SUCCESS" },
-      //          { name: "dialogTitle", value: "successfull" },
-      //          { name: "dialogDescription", value: "post created successfully" },
-      //       ],
-      //    });
-      //    router.push(url);
-      //    router.refresh();
-      // } catch (error) {
-      //    setIsSubmitting(false);
-      //    console.log(error);
-      // }
+      const newFormValues = {
+         title: values.title,
+         summary: values.summary,
+         body: values.body,
+         status: values.status,
+         commentable: values.commentable,
+         categoryId: parseInt(values.categoryId),
+         imageUrl: "",
+      };
+      
+      if (!values.image) {
+         console.log("image does not exist");
+         setIsSubmitting(false);
+         return;
+      }
+      const file: File = values.image;
+      try {
+         const res = await edgestore.publicFiles.upload({ file });
+         newFormValues.imageUrl = res.url;
+      } catch (error) {
+         console.log("error in upload image", error);
+         setIsSubmitting(false);
+         return;
+      }
+      try {
+         const { data } = await axios.post(
+            "http://localhost:3000/api/posts",
+            newFormValues
+         );
+         setIsSubmitting(false);
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/posts",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "post created successfully" },
+            ],
+         });
+         router.push(url);
+         router.refresh();
+      } catch (error) {
+         setIsSubmitting(false);
+         console.log(error);
+      }
    };
 
    return (
@@ -304,7 +305,7 @@ const NewPostForm = ({ categories }: Props) => {
                                  } transition duration-300 focus-visible:outline-none aria-[expanded=true]:border-indigo-500 focus:border-indigo-500 focus:shadow-sm`}>
                                  <SelectValue />
                                  {field.value === "" && (
-                                    <span className="flex-1 text-left text-slate-400 font-medium transition-all duration-300 translate-x-2.5">
+                                    <span className="flex-1 text-left text-slate-400 font-medium transition-all duration-300">
                                        No category selected
                                     </span>
                                  )}
@@ -317,9 +318,9 @@ const NewPostForm = ({ categories }: Props) => {
                                  <CommandGroup>
                                     {comboboxData.map((item) => (
                                        <CommandItem
-                                       className="px-0 py-0 aria-selected:bg-inherit aria-selected:text-inherit"
+                                          className="px-0 py-0 aria-selected:bg-inherit aria-selected:text-inherit"
                                           key={item.id}
-                                          value={item.id.toString()}>
+                                          value={item.value}>
                                           <SelectItem value={item.id.toString()}>
                                              {item.label}
                                           </SelectItem>
