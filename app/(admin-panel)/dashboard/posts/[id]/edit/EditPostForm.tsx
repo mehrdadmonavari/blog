@@ -131,54 +131,75 @@ const EditPostForm = ({ post, categories }: Props) => {
    });
 
    const onSubmit = async (values: FormData) => {
-      // setIsSubmitting(true);
+      setIsSubmitting(true);
 
-      // const newFormValues = {
-      //    title: values.title,
-      //    summary: values.summary,
-      //    body: values.body,
-      //    status: values.status,
-      //    commentable: values.commentable,
-      //    imageUrl: "",
-      //    publishedAt: values.publishedAt,
-      //    categoryId: parseInt(values.categoryId),
-      // };
+      const newFormValues: { [index: string]: any } = {
+         title: values.title !== post.title ? values.title : null,
+         summary: values.summary !== post.summary ? values.summary : null,
+         body: values.body !== post.body ? values.body : null,
+         status: values.status !== post.status ? values.status : null,
+         commentable: values.commentable !== post.commentable ? values.commentable : null,
+         imageUrl: "",
+         publishedAt:
+            values.publishedAt.toISOString() !== post.publishedAt.toISOString()
+               ? values.publishedAt
+               : null,
+         categoryId:
+            values.categoryId !== post.categoryId.toString()
+               ? parseInt(values.categoryId)
+               : null,
+      };
 
-      // if (!values.image) {
-      //    console.log("image does not exist");
-      //    setIsSubmitting(false);
-      //    return;
-      // }
-      // const file: File = values.image;
-      // try {
-      //    const res = await edgestore.publicFiles.upload({ file });
-      //    newFormValues.imageUrl = res.url;
-      // } catch (error) {
-      //    console.log("error in upload image", error);
-      //    setIsSubmitting(false);
-      //    return;
-      // }
-      // try {
-      //    const { data } = await axios.post(
-      //       "http://localhost:3000/api/posts",
-      //       newFormValues
-      //    );
-      //    setIsSubmitting(false);
-      //    const url = createQueryString({
-      //       path: "http://localhost:3000/dashboard/posts",
-      //       queries: [
-      //          { name: "dialog", value: "open" },
-      //          { name: "dialogType", value: "SUCCESS" },
-      //          { name: "dialogTitle", value: "successfull" },
-      //          { name: "dialogDescription", value: "post created successfully" },
-      //       ],
-      //    });
-      //    router.push(url);
-      //    router.refresh();
-      // } catch (error) {
-      //    setIsSubmitting(false);
-      //    console.log(error);
-      // }
+      if (!values.image) {
+         console.log("image does not exist");
+         setIsSubmitting(false);
+         return;
+      }
+
+      if (typeof values.image !== "string") {
+         const file: File = values.image;
+
+         try {
+            const res = await edgestore.publicFiles.upload({
+               file,
+               options: {
+                  replaceTargetUrl: post.imageUrl,
+               },
+            });
+            newFormValues.imageUrl = res.url;
+         } catch (error) {
+            console.log("error in upload image", error);
+            setIsSubmitting(false);
+            return;
+         }
+      }
+      
+      for (const prop in newFormValues) {
+         if (newFormValues[prop] === null || newFormValues[prop] === "")
+            delete newFormValues[prop];
+      }
+
+      try {
+         const { data } = await axios.patch(
+            `http://localhost:3000/api/posts/${post.id}`,
+            newFormValues
+         );
+         setIsSubmitting(false);
+         const url = createQueryString({
+            path: "http://localhost:3000/dashboard/posts",
+            queries: [
+               { name: "dialog", value: "open" },
+               { name: "dialogType", value: "SUCCESS" },
+               { name: "dialogTitle", value: "successfull" },
+               { name: "dialogDescription", value: "post edited successfully" },
+            ],
+         });
+         router.push(url);
+         router.refresh();
+      } catch (error) {
+         setIsSubmitting(false);
+         console.log(error);
+      }
    };
 
    return (
