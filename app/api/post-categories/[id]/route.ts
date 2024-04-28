@@ -1,6 +1,4 @@
 import prisma from "@/prisma/client";
-import { PostCategory } from "@prisma/client";
-import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -23,14 +21,6 @@ const updatePostCategorySchema = z.object({
    status: z.enum(["ENABLE", "DISABLE"]).nullish(),
    imageUrl: z.string().nullish(),
 });
-
-interface PostCategoryData {
-   name: string;
-   description: string;
-   status: "ENABLE" | "DISABLE";
-   imageUrl: string;
-   serId: string;
-}
 
 export async function PATCH(
    request: NextRequest,

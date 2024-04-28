@@ -16,9 +16,9 @@ const createPostSchema = z.object({
       .min(20, "Body must contain at least 20 character(s)"),
    status: z.enum(["ENABLE", "DISABLE"]),
    commentable: z.enum(["COMMENTABLE", "UNCOMMENTABLE"]),
+   categoryId: z.number(),
    imageUrl: z.string(),
    publishedAt: z.string().transform((str) => new Date(str)),
-   categoryId: z.number(),
 });
 
 interface PostData {
