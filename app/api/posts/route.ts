@@ -48,6 +48,12 @@ export async function POST(req: NextRequest) {
    if (!validation.success) {
       return NextResponse.json(validation.error.format(), { status: 400 });
    }
+
+   const category = await prisma.postCategory.findUnique({where: {id: body.categoryId}});
+
+   if (!category) {
+      return NextResponse.json("selected category not found", { status: 404 });
+   }
    
    const createdData: PostData = {
       title: body.title,
