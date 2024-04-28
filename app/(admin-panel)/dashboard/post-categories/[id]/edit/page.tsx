@@ -17,7 +17,7 @@ interface Props {
 }
 
 const EditPostCategoryPage = async ({ params: { id } }: Props) => {
-   const category = await prisma.postCategory.findUnique({ where: { id: parseInt(id) } });
+   const category : Category | null = await prisma.postCategory.findUnique({ where: { id: parseInt(id) } });
 
    if (!category) {
       return notFound();

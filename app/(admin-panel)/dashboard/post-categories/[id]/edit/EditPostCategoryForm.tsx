@@ -39,8 +39,7 @@ const editPostCategorySchema = z.object({
    name: z
       .string({ invalid_type_error: "Name field is required" })
       .min(1)
-      .max(255)
-      .optional(),
+      .max(255),
    description: z
       .string({ invalid_type_error: "Description field is required" })
       .min(10, "Description must contain at least 10 character(s)"),

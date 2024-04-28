@@ -27,6 +27,7 @@ type Post = {
    publishedAt: Date;
    createdAt: Date;
    updatedAt: Date;
+   categoryId: number;
    // category: Category;
    // user: User;
 };

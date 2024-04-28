@@ -16,15 +16,12 @@ interface Props {
 }
 
 const DatePicker = ({ date, setDate, invalid }: Props) => {
-   // const [date, setDate] = useState<Date>();
-
    return (
       <Popover>
          <PopoverTrigger asChild>
             <Button
                variant="selectInput"
                className={cn(
-                  // "w-[280px] justify-start text-left font-normal",
                   `text-slate-700 ${
                      invalid && "border-red-500"
                   } transition duration-300 focus-visible:border-indigo-500 focus-visible:shadow-sm placeholder:text-slate-400 placeholder:font-medium placeholder:transition-all placeholder:duration-300 focus-visible:placeholder:translate-x-2.5`,
