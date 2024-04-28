@@ -8,12 +8,12 @@ import {
    BreadcrumbPage,
    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import NewPostForm from "./NewPostForm";
+// import NewPostForm from "./NewPostForm";
 import prisma from "@/prisma/client";
 
-const NewPostPage = async () => {
+const EditPostPage = async () => {
    const categories: Category[] = await prisma.postCategory.findMany();
-
+   console.log(categories);
    return (
       <div className="flex-1 flex flex-col">
          <div className="py-4 sm:py-6">
@@ -32,19 +32,17 @@ const NewPostPage = async () => {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                     <BreadcrumbPage>New Post</BreadcrumbPage>
+                     <BreadcrumbPage>Edit Post</BreadcrumbPage>
                   </BreadcrumbItem>
                </BreadcrumbList>
             </Breadcrumb>
          </div>
          <div className="flex-1 bg-white rounded-lg shadow-lg p-6 my-3">
-            <div className="text-2xl text-slate-700 font-semibold">
-               New Post registration
-            </div>
-            <NewPostForm categories={categories} />
+            <div className="text-2xl text-slate-700 font-semibold">Edit Post</div>
+            {/* <NewPostForm categories={categories} /> */}
          </div>
       </div>
    );
 };
 
-export default NewPostPage;
+export default EditPostPage;
